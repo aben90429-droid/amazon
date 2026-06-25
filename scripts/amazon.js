@@ -1,9 +1,14 @@
 import { cart, addToCart } from '../data/cart.js';
-import { products } from '../data/products.js';
+import { products,loadProducts } from '../data/products.js';
 import { formatcurrency } from './uitils/money.js';
 
+loadProducts(renderProductsGrid);
+
+function renderProductsGrid() {
 
 let productHTML = '';
+
+
 
 products.forEach((product) => {
   productHTML +=
@@ -87,3 +92,4 @@ document.querySelectorAll('.js-rell')
 document.querySelector('.js-cart-quantity2').innerHTML = cart.length;
 
 updateCartQuantity();
+}
