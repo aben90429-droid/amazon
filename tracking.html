@@ -68,7 +68,6 @@
         <div class="product-info">
           Quantity: 1
         </div>
-
         <img class="product-image" src="images/products/athletic-cotton-socks-6-pairs.jpg">
 
         <div class="progress-labels-container">
@@ -88,5 +87,11 @@
         </div>
       </div>
     </div>
+
+    <script>
+      const url = new URL(window.location.href);
+      console.log(url.searchParams.get('orderId'));
+         console.log(url.searchParams.get('productId'));
+    </script>
   </body>
 </html>
