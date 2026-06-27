@@ -80,7 +80,9 @@ export function loadProductsfetch() {
   return new product(productDetails);
 });;
 console.log('Products loaded');
-  })
+  }).catch((error) => {
+    console.log('error loading products');
+  });
   return promise;
 }/*
 loadProductsfetch().then(() => {
@@ -101,9 +103,11 @@ export function loadProducts(fun) {
 console.log('Products loaded');
 fun();
   });
+  xhr.addEventListener('error', (error) => {
+    console.log('error loading products');
+  });
   xhr.open('GET', 'https://supersimplebackend.dev/products');
   xhr.send();
-  
 }
 
 
