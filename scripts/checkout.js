@@ -5,6 +5,27 @@ import { renderPaymatsummery } from './checkout/paymatsummery.js';
 //import {xhr} from '../data/backend.js'; just for a teastd
 import {loadProducts, loadProductsfetch} from '../data/products.js';
 import { loadCart } from '../data/cart.js';
+
+async function loadPage() {
+   
+await  loadProductsfetch();
+
+const value = await new Promise((resolve) => {
+loadCart(
+() => {
+    resolve('value3');
+}
+)
+    })
+
+     renderOrderSummary();
+    renderPaymatsummery();
+ 
+    
+}
+
+loadPage();
+/*
 Promise.all([
   loadProductsfetch()
   ,new Promise((resolve) => {
@@ -19,7 +40,7 @@ loadCart(
     renderOrderSummary();
     renderPaymatsummery();
 })
-
+*/
 /*new Promise((resolve) =>{
    
     loadProducts(() => {
@@ -41,7 +62,17 @@ loadCart(
     renderOrderSummary();
     renderPaymatsummery();
 })*/
-/*
+/*/*
+async function loadPage() {
+    console.log('loadPage');   
+}
+the above cose is the short cut of this =>s
+function loadPage() {}
+return new Promise((resolve) => {
+    console.log('loadPage');   
+    resolve();
+}  )
+*/
 loadProducts(() => {
     loadCart(() => {
 renderOrderSummary();
@@ -49,4 +80,3 @@ renderPaymatsummery();
     })
 
 });
-*/
