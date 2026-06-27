@@ -65,6 +65,27 @@ console.log(date);
 console.log(date.toLocaleString());
 */
 export let products = []
+export function loadProductsfetch() {
+  const promise =fetch(
+    'https://supersimplebackend.dev/products').then
+
+  ((response) =>{
+    return response.json();
+  }).then((productsData) => {
+ products = productsData.map((productDetails) => {
+  if (productDetails.type === "clothing") {
+    return new clossing(productDetails);
+  }
+
+  return new product(productDetails);
+});;
+console.log('Products loaded');
+  })
+  return promise;
+}/*
+loadProductsfetch().then(() => {
+  console.log('next step');
+});*/
 
 export function loadProducts(fun) {
   const xhr = new XMLHttpRequest();
