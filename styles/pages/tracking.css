@@ -22,10 +22,44 @@
   font-size: 25px;
   font-weight: 700;
   margin-bottom: 10px;
+  color: rgb(0, 118, 0);
+  margin-top: 5px;
+  margin-bottom: 22px;
+}
+
+@media (max-width: 1000px) {
+  .delivery-date {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 575px) {
+  .delivery-date {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 450px) {
+  .delivery-date {
+    font-size: 16px;
+  }
 }
 
 .product-info {
   margin-bottom: 3px;
+  font-size: 16px;
+}
+
+@media (max-width: 575px) {
+  .product-info {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 450px) {
+  .product-info {
+    font-size: 14px;
+  }
 }
 
 .product-image {
