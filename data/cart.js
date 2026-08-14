@@ -33,7 +33,7 @@ function savetostorage() {
 }
 
 
-export function addToCart(productId) {
+export function addToCart(productId, quantityToAdd = 1) {
   let matchitem;
 
   cart.forEach((item) => {
@@ -43,12 +43,12 @@ export function addToCart(productId) {
   });
 
   if (matchitem) {
-    matchitem.quantity += 1;
+    matchitem.quantity += quantityToAdd;
   } else {
 
     cart.push({
       productId: productId,
-      quantity: 1,
+      quantity: quantityToAdd,
       deliveryoptions: '1'
     });
   };

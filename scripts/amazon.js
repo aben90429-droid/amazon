@@ -82,7 +82,12 @@ document.querySelectorAll('.js-rell')
   .forEach((button) => {
     button.addEventListener('click', () => {
       const productId = button.dataset.productId;
-      addToCart(productId);
+      
+      // Get the select dropdown for this product
+      const selectElement = button.closest('.product-container').querySelector('select');
+      const selectedQuantity = parseInt(selectElement.value);
+      
+      addToCart(productId, selectedQuantity);
 
       updateCartQuantity();
 
