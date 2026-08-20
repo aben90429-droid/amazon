@@ -1,4 +1,12 @@
 const API_URL = 'http://localhost:8000';
+const signedInUser = JSON.parse(localStorage.getItem('topazionUser') || 'null');
+const token = localStorage.getItem('topazionToken');
+
+if (!signedInUser || signedInUser.role !== 'owner') {
+  window.location.href = 'login.html';
+} else {
+  loadProducts();
+}
 const form = document.querySelector('#product-form');
 const productList = document.querySelector('#product-list');
 const statusElement = document.querySelector('#status');
@@ -11,7 +19,7 @@ function showStatus(message, isError = false) {
 async function apiRequest(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
-    headers: { 'Content-Type': 'application/json', ...options.headers }
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, ...options.headers }
   });
   const payload = await response.json();
   if (!response.ok) {
@@ -87,4 +95,3 @@ productList.addEventListener('click', async (event) => {
 });
 
 document.querySelector('#refresh-button').addEventListener('click', loadProducts);
-loadProducts();

@@ -295,6 +295,7 @@ def list_products():
 
 
 @app.post("/products")
+@require_owner
 def create_product():
     payload = request.get_json(silent=True)
     validation_error = validate_product(payload)
@@ -323,6 +324,7 @@ def create_product():
 
 
 @app.put("/products/<product_id>")
+@require_owner
 def update_product(product_id: str):
     payload = request.get_json(silent=True)
     validation_error = validate_product(payload)
@@ -347,6 +349,7 @@ def update_product(product_id: str):
 
 
 @app.delete("/products/<product_id>")
+@require_owner
 def delete_product(product_id: str):
     with get_connection() as connection:
         result = connection.execute("DELETE FROM products WHERE id = ?", (product_id,))

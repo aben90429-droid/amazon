@@ -27,8 +27,10 @@
 }
 
 .amazon-logo {
-  width: 100px;
-  margin-top: 12px;
+  display: block;
+  height: 52px;
+  object-fit: contain;
+  width: 140px;
 }
 
 .amazon-mobile-logo {
@@ -50,8 +52,9 @@
 
   .amazon-mobile-logo {
     display: inline-block;
-    height: 35px;
-    margin-top: 5px;
+    height: 46px;
+    object-fit: contain;
+    width: 82px;
   }
 }
 

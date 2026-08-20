@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Topazion Owner Dashboard</title>
+  <link rel="icon" type="image/jpeg" href="images/topazion-favicon.jpg">
+  <link rel="stylesheet" href="styles/auth.css">
+  <link rel="stylesheet" href="styles/owner.css">
+</head>
+<body>
+  <main class="owner-shell">
+    <header class="owner-header">
+      <div>
+        <p class="eyebrow">Topazion / owner</p>
+        <h1>Control center</h1>
+        <p class="intro">Manage the store, inventory, customers, and carts from one place.</p>
+      </div>
+      <button id="logout-button" type="button">Sign out</button>
+    </header>
+    <p class="message" id="message" role="alert"></p>
+    <section class="owner-links" aria-label="Owner tools">
+      <a class="owner-card" href="admin.html"><span class="card-label">Inventory</span><strong>Add, remove, and update products</strong><span>Manage prices and stock amounts</span></a>
+      <a class="owner-card" href="people.html"><span class="card-label">People</span><strong>See signed-in customers</strong><span>Inspect each person’s separate cart</span></a>
+      <a class="owner-card" href="amazon.html"><span class="card-label">Storefront</span><strong>Open Topazion as a customer</strong><span>Review the live shopping experience</span></a>
+    </section>
+  </main>
+  <script type="module" src="scripts/owner.js"></script>
+</body>
+</html>

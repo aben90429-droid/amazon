@@ -10,7 +10,17 @@ function notifyCartError(message) {
 loadFromStorage();
 
 export function loadFromStorage() {
-  cart = JSON.parse(localStorage.getItem('cart'))
+  try {
+    cart = JSON.parse(localStorage.getItem('cart'));
+  } catch (error) {
+    console.error('Stored cart was invalid and has been cleared.', error);
+    cart = [];
+    localStorage.removeItem('cart');
+  }
+
+  if (!Array.isArray(cart)) {
+    cart = [];
+  }
 
   if (!cart) {
     cart = [{
@@ -53,6 +63,11 @@ function syncUserCart() {
     },
     body: JSON.stringify({ items: cart })
   }).then(async (response) => {
+    if (response.status === 401) {
+      localStorage.removeItem('topazionToken');
+      localStorage.removeItem('topazionUser');
+      return;
+    }
     if (!response.ok) {
       const payload = await response.json();
       throw new Error(payload.error || `Could not save your cart (${response.status}).`);

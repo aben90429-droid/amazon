@@ -1,10 +1,11 @@
 const API_URL = 'http://localhost:8000';
 const token = localStorage.getItem('topazionToken');
+const signedInUser = JSON.parse(localStorage.getItem('topazionUser') || 'null');
 const peopleList = document.querySelector('#people-list');
 const message = document.querySelector('#message');
 const currentUser = document.querySelector('#current-user');
 
-if (!token) {
+if (!token || !signedInUser || signedInUser.role !== 'owner') {
   window.location.href = 'login.html';
 } else {
   loadPeople();

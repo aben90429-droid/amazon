@@ -1,0 +1,12 @@
+.owner-shell { margin: 0 auto; max-width: 1120px; padding: 54px 24px 80px; }
+.owner-header { align-items: end; display: flex; gap: 24px; justify-content: space-between; margin-bottom: 34px; }
+.owner-header h1 { font-size: clamp(40px, 7vw, 76px); }
+.owner-header button { background: #17211f; border: 0; color: #fff; cursor: pointer; font: inherit; font-weight: 700; padding: 12px 16px; }
+.owner-header button:hover { background: #d86d3f; }
+.owner-links { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); }
+.owner-card { background: #fff; border: 1px solid #d9e1db; color: #17211f; display: grid; gap: 12px; min-height: 220px; padding: 24px; text-decoration: none; }
+.owner-card:hover { border-color: #d86d3f; transform: translateY(-2px); }
+.owner-card strong { font-family: 'Space Grotesk', sans-serif; font-size: 26px; line-height: 1.05; }
+.owner-card > span:last-child { color: #6c7772; }
+.card-label { color: #a94828; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+@media (max-width: 760px) { .owner-shell { padding: 32px 14px; } .owner-header { align-items: start; flex-direction: column; } .owner-links { grid-template-columns: 1fr; } .owner-card { min-height: 0; } }
