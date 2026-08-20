@@ -1,4 +1,11 @@
 export let cart;
+let productIds;
+let productStock = new Map();
+
+function notifyCartError(message) {
+  console.error(message);
+  window.alert(`Topazion error: ${message}`);
+}
 
 loadFromStorage();
 
@@ -28,12 +35,49 @@ export function loadFromStorage() {
   }
 }
 
-function savetostorage() {
+function savetostorage(shouldSync = true) {
   localStorage.setItem('cart', JSON.stringify(cart));
+  if (shouldSync) {
+    syncUserCart();
+  }
 }
 
+function syncUserCart() {
+  const token = localStorage.getItem('topazionToken');
+  if (!token) return;
+  fetch('http://localhost:8000/me/cart', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ items: cart })
+  }).then(async (response) => {
+    if (!response.ok) {
+      const payload = await response.json();
+      throw new Error(payload.error || `Could not save your cart (${response.status}).`);
+    }
+  }).catch((error) => notifyCartError(error.message));
+}
+
+export function setProductCatalog(products) {
+  productIds = new Set(products.map((product) => product.id));
+  productStock = new Map(products.map((product) => [product.id, product.stock]));
+  cart = cart.filter((item) => productIds.has(item.productId));
+  savetostorage(false);
+}
+
+function validateQuantity(quantity) {
+  if (!Number.isInteger(quantity) || quantity < 1) {
+    throw new Error('Quantity must be a whole number greater than zero.');
+  }
+}
 
 export function addToCart(productId, quantityToAdd = 1) {
+  if (productIds && !productIds.has(productId)) {
+    throw new Error('That product does not exist in the catalog.');
+  }
+  validateQuantity(quantityToAdd);
   let matchitem;
 
   cart.forEach((item) => {
@@ -43,13 +87,20 @@ export function addToCart(productId, quantityToAdd = 1) {
   });
 
   if (matchitem) {
+    const requestedQuantity = matchitem.quantity + quantityToAdd;
+    if (productStock.has(productId) && requestedQuantity > productStock.get(productId)) {
+      throw new Error(`Only ${productStock.get(productId)} unit(s) of this product are available.`);
+    }
     matchitem.quantity += quantityToAdd;
   } else {
+    if (productStock.has(productId) && quantityToAdd > productStock.get(productId)) {
+      throw new Error(`Only ${productStock.get(productId)} unit(s) of this product are available.`);
+    }
 
     cart.push({
       productId: productId,
       quantity: quantityToAdd,
-      deliveryoptions: '1'
+      deliveryOptionId: '1'
     });
   };
 
@@ -79,6 +130,10 @@ export function setQuantity(productId, quantity) {
     removefromcart(productId);
     return;
   }
+  if (productStock.has(productId) && quantity > productStock.get(productId)) {
+    notifyCartError(`Only ${productStock.get(productId)} unit(s) of this product are available.`);
+    return;
+  }
 
   cartItem.quantity = quantity;
   savetostorage();
@@ -97,10 +152,15 @@ export function loadCart(fun) {
   const xhr = new XMLHttpRequest();
 
   xhr.addEventListener('load', () => {
-  console.log(xhr.response);
-fun();
+    if (xhr.status < 200 || xhr.status >= 300) {
+      notifyCartError(`Cart request failed (${xhr.status}).`);
+      return;
+    }
+    fun();
   });
-  xhr.open('GET', 'https://supersimplebackend.dev/cart');
+  xhr.addEventListener('error', () => {
+    notifyCartError('Could not connect to the Topazion backend.');
+  });
+  xhr.open('GET', 'http://localhost:8000/cart');
   xhr.send();
-  
 }

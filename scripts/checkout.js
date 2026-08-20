@@ -5,6 +5,7 @@ import { renderPaymatsummery } from './checkout/paymatsummery.js';
 //import {xhr} from '../data/backend.js'; just for a teastd
 import {loadProducts, loadProductsfetch} from '../data/products.js';
 import { loadCart } from '../data/cart.js';
+import { notifyError } from '../data/backend.js';
 
 async function loadPage() {
    try{
@@ -22,7 +23,7 @@ loadCart(
    }
    
    catch(error){
-    console.log('error loading cart');
+    notifyError(error);
    }
 
 

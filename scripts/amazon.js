@@ -1,7 +1,10 @@
 import { cart, addToCart } from '../data/cart.js';
+import { notifyError } from '../data/backend.js';
 import { products,loadProducts } from '../data/products.js';
 import { formatcurrency } from './uitils/money.js';
+import { setupAccountMenu } from './account.js';
 
+setupAccountMenu();
 loadProducts(renderProductsGrid);
 
 function renderProductsGrid() {
@@ -33,6 +36,8 @@ products.forEach((product) => {
           </div>
 
           <div class="product-price"> ${product.getprice()}</div>
+
+          <div class="product-stock">${product.stock} in stock</div>
 
           <div class="product-quantity-container js-product-quantity-container${product.id}">
             <select>
@@ -81,13 +86,22 @@ function updateCartQuantity() {
 document.querySelectorAll('.js-rell')
   .forEach((button) => {
     button.addEventListener('click', () => {
+      if (!localStorage.getItem('topazionToken')) {
+        window.location.href = 'login.html';
+        return;
+      }
       const productId = button.dataset.productId;
       
       // Get the select dropdown for this product
       const selectElement = button.closest('.product-container').querySelector('select');
       const selectedQuantity = parseInt(selectElement.value);
       
-      addToCart(productId, selectedQuantity);
+      try {
+        addToCart(productId, selectedQuantity);
+      } catch (error) {
+        notifyError(error);
+        return;
+      }
 
       updateCartQuantity();
 

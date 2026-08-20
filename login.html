@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Topazion Sign In</title>
+  <link rel="icon" type="image/jpeg" href="images/topazion-favicon.jpg">
+  <link rel="stylesheet" href="styles/auth.css">
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-card">
+      <p class="eyebrow">Topazion account</p>
+      <h1>Sign in</h1>
+      <p class="intro">Use your name and password to open your own cart.</p>
+      <form id="login-form">
+        <label>Username <input name="username" autocomplete="username" required></label>
+        <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+        <button type="submit">Sign in</button>
+      </form>
+      <p class="message" id="message" role="alert"></p>
+      <a href="amazon.html">Return to store</a>
+    </section>
+  </main>
+  <script type="module" src="scripts/login.js"></script>
+</body>
+</html>

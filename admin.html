@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Topazion Inventory</title>
+  <link rel="icon" type="image/jpeg" href="images/topazion-favicon.jpg">
+  <link rel="stylesheet" href="styles/admin.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <header class="admin-header">
+      <div>
+        <p class="eyebrow">Topazion / control room</p>
+        <h1>Inventory</h1>
+        <p class="subtitle">Manage what customers can see and buy.</p>
+      </div>
+      <a class="back-link" href="amazon.html">Back to store</a>
+    </header>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Catalog editor</p>
+          <h2>Add a product</h2>
+        </div>
+        <span class="status" id="status" role="status"></span>
+      </div>
+      <form id="product-form" class="product-form">
+        <label>Name <input name="name" required></label>
+        <label>Image path <input name="image" placeholder="images/products/example.jpg" required></label>
+        <label>Price in cents <input name="priceCents" type="number" min="0" required></label>
+        <label>Stock amount <input name="stock" type="number" min="0" required></label>
+        <label>Rating stars <input name="stars" type="number" min="0" max="5" step="0.5" value="4" required></label>
+        <label>Rating count <input name="ratingCount" type="number" min="0" value="0" required></label>
+        <label class="wide">Keywords, separated by commas <input name="keywords" placeholder="sports, apparel"></label>
+        <button type="submit">Add product</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Live database</p>
+          <h2>Products and stock</h2>
+        </div>
+        <button class="secondary-button" id="refresh-button" type="button">Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
+          <tbody id="product-list"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="scripts/admin.js"></script>
+</body>
+</html>

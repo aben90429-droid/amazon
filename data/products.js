@@ -1,4 +1,6 @@
 import { formatcurrency } from '../scripts/uitils/money.js';
+import { setProductCatalog } from './cart.js';
+import { notifyError } from './backend.js';
 
 
 
@@ -20,6 +22,7 @@ class product {
   name;
   rating;
   priceCents;
+  stock;
 
   constructor(producDetalis) {
     this.id = producDetalis.id;
@@ -27,6 +30,7 @@ class product {
     this.name = producDetalis.name;
     this.rating = producDetalis.rating;
     this.priceCents = producDetalis.priceCents;
+    this.stock = producDetalis.stock;
 
   }
 
@@ -67,7 +71,7 @@ console.log(date.toLocaleString());
 export let products = []
 export function loadProductsfetch() {
   const promise =fetch(
-    'https://supersimplebackend.dev/products').then
+    'http://localhost:8000/products').then
 
   ((response) =>{
     return response.json();
@@ -79,9 +83,11 @@ export function loadProductsfetch() {
 
   return new product(productDetails);
 });;
+setProductCatalog(products);
 console.log('Products loaded');
   }).catch((error) => {
-    console.log('error loading products');
+    notifyError(error);
+    throw error;
   });
   return promise;
 }/*
@@ -100,13 +106,14 @@ export function loadProducts(fun) {
 
   return new product(productDetails);
 });;
+setProductCatalog(products);
 console.log('Products loaded');
 fun();
   });
   xhr.addEventListener('error', (error) => {
-    console.log('error loading products');
+    notifyError(error);
   });
-  xhr.open('GET', 'https://supersimplebackend.dev/products');
+  xhr.open('GET', 'http://localhost:8000/products');
   xhr.send();
 }
 

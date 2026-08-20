@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root { color-scheme: light; --ink: #17211f; --muted: #6c7772; --line: #d9e1db; --paper: #f4f6f0; --panel: #fff; --accent: #d86d3f; --accent-dark: #a94828; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; }
+.admin-shell { max-width: 1180px; margin: 0 auto; padding: 52px 24px 80px; }
+.admin-header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 34px; }
+.eyebrow { margin: 0 0 8px; color: var(--accent-dark); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+h1, h2 { margin: 0; font-family: 'Space Grotesk', sans-serif; letter-spacing: 0; }
+h1 { font-size: clamp(38px, 7vw, 72px); line-height: .95; }
+h2 { font-size: 25px; }
+.subtitle { color: var(--muted); margin: 14px 0 0; }
+.back-link { color: var(--ink); font-weight: 700; }
+.panel { background: var(--panel); border: 1px solid var(--line); margin-top: 20px; padding: 24px; }
+.panel-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 22px; }
+.status { color: #26704c; font-size: 14px; font-weight: 700; }
+.status.error { color: #b13c2f; }
+.product-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+label { color: var(--muted); display: grid; gap: 7px; font-size: 13px; font-weight: 700; }
+input { border: 1px solid var(--line); color: var(--ink); font: inherit; padding: 11px 12px; width: 100%; }
+.wide { grid-column: 1 / -1; }
+button { background: var(--accent); border: 0; color: white; cursor: pointer; font: inherit; font-weight: 700; padding: 11px 16px; }
+button:hover { background: var(--accent-dark); }
+.secondary-button { background: var(--ink); }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; min-width: 680px; width: 100%; }
+th, td { border-bottom: 1px solid var(--line); padding: 14px 10px; text-align: left; vertical-align: middle; }
+th { color: var(--muted); font-size: 12px; text-transform: uppercase; }
+td strong, td small { display: block; }
+td small { color: var(--muted); font-size: 11px; margin-top: 4px; }
+.stock-input { max-width: 100px; }
+.actions { white-space: nowrap; }
+.delete-button { background: transparent; color: var(--accent-dark); margin-left: 8px; }
+.delete-button:hover { background: #f9e3da; }
+@media (max-width: 640px) { .admin-shell { padding: 32px 14px; } .admin-header { align-items: start; flex-direction: column; } .product-form { grid-template-columns: 1fr; } .wide { grid-column: auto; } .panel { padding: 16px; } }

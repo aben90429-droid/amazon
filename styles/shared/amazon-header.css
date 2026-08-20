@@ -107,6 +107,42 @@
   color: white;
 }
 
+.account-menu {
+  position: relative;
+}
+
+.account-menu summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.account-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.account-dropdown {
+  background: white;
+  border: 1px solid rgb(213, 217, 217);
+  padding: 10px;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 10;
+}
+
+.sign-out-button {
+  background: white;
+  border: 0;
+  color: rgb(33, 33, 33);
+  cursor: pointer;
+  padding: 8px 14px;
+  white-space: nowrap;
+}
+
+.sign-out-button:hover {
+  background: rgb(245, 245, 245);
+}
+
 .returns-text {
   display: block;
   font-size: 13px;

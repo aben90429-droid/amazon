@@ -3,6 +3,7 @@ import { getproduct, products } from "../../data/products.js";
 import { getdeliveryoption } from "../../data/delivery.js";
 import { formatcurrency } from "../uitils/money.js  ";
 import {addOrder} from "../../data/orders.js";
+import { notifyError } from "../../data/backend.js";
 export function renderPaymatsummery() {
   let productpriceCents = 0;
   let shippingpriceCents = 0;
@@ -61,7 +62,7 @@ export function renderPaymatsummery() {
 
   document.querySelector('.js-place-order').addEventListener('click', async () => {
     try{
-      const response = await fetch('https://supersimplebackend.dev/orders', {
+      const response = await fetch('http://localhost:8000/orders', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -71,14 +72,17 @@ export function renderPaymatsummery() {
   })
 });
 
+if (!response.ok) {
+  const failure = await response.json();
+  throw new Error(failure.error || `Order failed (${response.status}).`);
+}
 const order = await response.json();
 addOrder(order);
+window.location.href = 'orders.html';
 
     }
     catch(error){
-      console.log('Error placing order:', error);
+      notifyError(error);
     }
-    
-window.location.href = 'orders.html'
   })
 }
