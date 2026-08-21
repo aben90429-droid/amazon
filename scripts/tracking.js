@@ -1,6 +1,5 @@
 import { cart, loadCart } from '../data/cart.js';
 import { products, loadProductsfetch } from '../data/products.js';
-import { orders } from '../data/orders.js';
 
 async function loadPage() {
   try {
@@ -21,7 +20,7 @@ async function loadPage() {
   }
 }
 
-function renderTracking() {
+async function renderTracking() {
   // Get the URL parameters to determine which product to show
   const url = new URL(window.location.href);
   const productIdParam = url.searchParams.get('productId');
@@ -30,9 +29,7 @@ function renderTracking() {
   // Find the matching item in the cart
   let trackingItem = null;
 
-  const savedOrder = orderIdParam
-    ? orders.find(order => order.orderId === orderIdParam)
-    : null;
+  const savedOrder = orderIdParam ? await loadSavedOrder(orderIdParam) : null;
   const orderItems = savedOrder ? savedOrder.cart : cart;
 
   if (productIdParam) {
@@ -108,6 +105,17 @@ function renderTracking() {
 
   // Update the cart quantity in the header
   updateCartQuantity();
+}
+
+async function loadSavedOrder(orderId) {
+  const token = localStorage.getItem('topazionToken');
+  if (!token) return null;
+  const response = await fetch('http://localhost:8000/me/orders', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) return null;
+  const orders = await response.json();
+  return orders.find(order => order.orderId === orderId) || null;
 }
 
 function generateDeliveryDate() {

@@ -87,6 +87,17 @@ def initialize_database() -> None:
             )
             """
         )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS orders (
+                id TEXT PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                items TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+            """
+        )
         seed_users(connection)
         product_count = connection.execute("SELECT COUNT(*) FROM products").fetchone()[0]
         if product_count == 0:
@@ -379,11 +390,13 @@ def validate_cart():
 
 
 @app.post("/orders")
+@require_user
 def create_order():
     payload = request.get_json(silent=True) or {}
     items = payload.get("cart")
     if not isinstance(items, list) or not items:
         return error("An order must contain at least one product.")
+    order_id = str(uuid4())
     try:
         with get_connection() as connection:
             connection.execute("BEGIN IMMEDIATE")
@@ -402,9 +415,27 @@ def create_order():
                     "UPDATE products SET stock = stock - ? WHERE id = ?",
                     (item["quantity"], item["productId"]),
                 )
+            connection.execute(
+                "INSERT INTO orders (id, user_id, items) VALUES (?, ?, ?)",
+                (order_id, g.current_user["id"], json.dumps(items)),
+            )
     except sqlite3.Error as database_error:
         return error(f"Could not place the order: {database_error}", 500)
-    return jsonify({"orderId": str(uuid4()), "cart": items}), 201
+    return jsonify({"orderId": order_id, "cart": items}), 201
+
+
+@app.get("/me/orders")
+@require_user
+def get_my_orders():
+    with get_connection() as connection:
+        rows = connection.execute(
+            "SELECT id, items, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC",
+            (g.current_user["id"],),
+        ).fetchall()
+    return jsonify([
+        {"orderId": row["id"], "cart": json.loads(row["items"]), "createdAt": row["created_at"]}
+        for row in rows
+    ])
 
 
 @app.get("/cart")

@@ -2,7 +2,6 @@ import { cart, clearCart } from "../../data/cart.js";
 import { getproduct, products } from "../../data/products.js";
 import { getdeliveryoption } from "../../data/delivery.js";
 import { formatcurrency } from "../uitils/money.js  ";
-import {addOrder} from "../../data/orders.js";
 import { notifyError } from "../../data/backend.js";
 export function renderPaymatsummery() {
   let productpriceCents = 0;
@@ -66,7 +65,8 @@ export function renderPaymatsummery() {
       const response = await fetch('http://localhost:8000/orders', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('topazionToken')}`
       },
   body: JSON.stringify({
     cart: orderCart
@@ -78,7 +78,6 @@ if (!response.ok) {
   throw new Error(failure.error || `Order failed (${response.status}).`);
 }
 const order = await response.json();
-addOrder({ ...order, createdAt: new Date().toISOString() });
 clearCart();
 window.location.href = 'orders.html';
 

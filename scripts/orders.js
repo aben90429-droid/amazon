@@ -1,4 +1,3 @@
-import { orders } from '../data/orders.js';
 import { products, loadProductsfetch, getproduct } from '../data/products.js';
 import { getdeliveryoption } from '../data/delivery.js';
 import { formatcurrency } from './uitils/money.js';
@@ -19,7 +18,7 @@ function getDeliveryDate(cartItem) {
   return deliveryDate.toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
 }
 
-function renderOrders() {
+function renderOrders(orders) {
   const ordersGrid = document.querySelector('.js-orders-grid');
   if (!ordersGrid) return;
 
@@ -76,5 +75,24 @@ function renderOrders() {
   }).join('');
 }
 
-await loadProductsfetch();
-renderOrders();
+async function loadOrdersPage() {
+  const token = localStorage.getItem('topazionToken');
+  if (!token) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  try {
+    await loadProductsfetch();
+    const response = await fetch('http://localhost:8000/me/orders', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || 'Could not load your orders.');
+    renderOrders(payload);
+  } catch (error) {
+    document.querySelector('.js-orders-grid').innerHTML = `<p>${error.message}</p>`;
+  }
+}
+
+loadOrdersPage();
