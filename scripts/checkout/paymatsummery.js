@@ -1,4 +1,4 @@
-import { cart } from "../../data/cart.js";
+import { cart, clearCart } from "../../data/cart.js";
 import { getproduct, products } from "../../data/products.js";
 import { getdeliveryoption } from "../../data/delivery.js";
 import { formatcurrency } from "../uitils/money.js  ";
@@ -62,13 +62,14 @@ export function renderPaymatsummery() {
 
   document.querySelector('.js-place-order').addEventListener('click', async () => {
     try{
+      const orderCart = cart.map((cartItem) => ({ ...cartItem }));
       const response = await fetch('http://localhost:8000/orders', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
   body: JSON.stringify({
-    cart: cart 
+    cart: orderCart
   })
 });
 
@@ -77,7 +78,8 @@ if (!response.ok) {
   throw new Error(failure.error || `Order failed (${response.status}).`);
 }
 const order = await response.json();
-addOrder(order);
+addOrder({ ...order, createdAt: new Date().toISOString() });
+clearCart();
 window.location.href = 'orders.html';
 
     }

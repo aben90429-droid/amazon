@@ -1,5 +1,6 @@
 import { cart, loadCart } from '../data/cart.js';
 import { products, loadProductsfetch } from '../data/products.js';
+import { orders } from '../data/orders.js';
 
 async function loadPage() {
   try {
@@ -29,12 +30,17 @@ function renderTracking() {
   // Find the matching item in the cart
   let trackingItem = null;
 
+  const savedOrder = orderIdParam
+    ? orders.find(order => order.orderId === orderIdParam)
+    : null;
+  const orderItems = savedOrder ? savedOrder.cart : cart;
+
   if (productIdParam) {
     // If productId is provided in URL, find it in cart
-    trackingItem = cart.find(item => item.productId === productIdParam);
-  } else if (cart.length > 0) {
+    trackingItem = orderItems.find(item => item.productId === productIdParam);
+  } else if (orderItems.length > 0) {
     // Otherwise, show the first item in cart
-    trackingItem = cart[0];
+    trackingItem = orderItems[0];
   }
 
   if (!trackingItem) {

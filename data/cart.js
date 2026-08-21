@@ -135,6 +135,11 @@ export function removefromcart(productId) {
   savetostorage();
 }
 
+export function clearCart() {
+  cart = [];
+  savetostorage();
+}
+
 export function setQuantity(productId, quantity) {
   const cartItem = cart.find((item) => item.productId === productId);
   if (!cartItem) return;
