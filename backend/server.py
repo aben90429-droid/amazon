@@ -22,6 +22,7 @@ app = Flask(__name__)
 
 @app.after_request
 def add_cors_headers(response):
+    print(f"{request.method} {request.path} -> {response.status_code}", flush=True)
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
@@ -462,4 +463,4 @@ if __name__ == "__main__":
     initialize_database()
     port = int(os.environ.get("PORT", "8000"))
     print(f"Topazion Flask backend running on port {port}")
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
