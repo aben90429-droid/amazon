@@ -1,4 +1,5 @@
 export let cart;
+import { backendUrl } from './backend.js';
 let productIds;
 let productStock = new Map();
 
@@ -55,7 +56,7 @@ function savetostorage(shouldSync = true) {
 function syncUserCart() {
   const token = localStorage.getItem('topazionToken');
   if (!token) return;
-  fetch('http://localhost:8000/me/cart', {
+  fetch(`${backendUrl}/me/cart`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -181,6 +182,6 @@ export function loadCart(fun) {
   xhr.addEventListener('error', () => {
     notifyCartError('Could not connect to the Topazion backend.');
   });
-  xhr.open('GET', 'http://localhost:8000/cart');
+  xhr.open('GET', `${backendUrl}/cart`);
   xhr.send();
 }

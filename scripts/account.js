@@ -1,3 +1,5 @@
+import { backendUrl } from '../data/backend.js';
+
 export function setupAccountMenu() {
   const accountName = document.querySelector('.js-account-name');
   const signOutButton = document.querySelector('.sign-out-button');
@@ -19,7 +21,7 @@ export function setupAccountMenu() {
     const token = localStorage.getItem('topazionToken');
     try {
       if (token) {
-        await fetch('http://localhost:8000/auth/logout', {
+        await fetch(`${backendUrl}/auth/logout`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` }
         });

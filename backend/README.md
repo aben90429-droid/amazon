@@ -16,7 +16,13 @@ From the project folder:
 python backend/server.py
 ```
 
-The Flask API runs at `http://localhost:8000`.
+The Flask API listens on port `8000` on all network interfaces, so it can be
+reached through a forwarded/public port. Locally it is available at
+`http://localhost:8000`.
+
+When sharing the project, start the backend first, forward port `8000`, and
+open the forwarded port URL. Keep the backend process running while others
+use the API.
 
 Open `admin.html` in the browser to manage products and stock.
 

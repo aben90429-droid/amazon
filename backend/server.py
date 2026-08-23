@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import secrets
 import sqlite3
 from functools import wraps
@@ -8,10 +9,11 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from flask import Flask, g, jsonify, request
+from flask import Flask, g, jsonify, redirect, request, send_from_directory
 from werkzeug.security import check_password_hash, generate_password_hash
 
 BASE_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = BASE_DIR.parent
 DATABASE_FILE = BASE_DIR / "topazion.sqlite3"
 PRODUCTS_FILE = BASE_DIR / "products.json"
 
@@ -443,7 +445,21 @@ def get_cart():
     return jsonify({"items": []})
 
 
+@app.get("/")
+def storefront():
+    return redirect("/amazon.html")
+
+
+@app.get("/<path:file_path>")
+def frontend_file(file_path: str):
+    file_path = Path(file_path)
+    if file_path.is_absolute() or ".." in file_path.parts:
+        return jsonify({"error": "File not found."}), 404
+    return send_from_directory(PROJECT_DIR, file_path.as_posix())
+
+
 if __name__ == "__main__":
     initialize_database()
-    print("Topazion Flask backend running at http://localhost:8000")
-    app.run(host="localhost", port=8000, debug=True)
+    port = int(os.environ.get("PORT", "8000"))
+    print(f"Topazion Flask backend running on port {port}")
+    app.run(host="0.0.0.0", port=port, debug=True)

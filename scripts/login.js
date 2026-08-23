@@ -1,6 +1,7 @@
 import { getLoginDestination } from './login-routing.js';
+import { backendUrl } from '../data/backend.js';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = backendUrl;
 const form = document.querySelector('#login-form');
 const message = document.querySelector('#message');
 const signInButton = document.querySelector('#sign-in-button');

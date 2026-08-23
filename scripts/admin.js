@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:8000';
+import { backendUrl } from '../data/backend.js';
+
+const API_URL = backendUrl;
 const signedInUser = JSON.parse(localStorage.getItem('topazionUser') || 'null');
 const token = localStorage.getItem('topazionToken');
 

@@ -1,6 +1,7 @@
 import { products, loadProductsfetch, getproduct } from '../data/products.js';
 import { getdeliveryoption } from '../data/delivery.js';
 import { formatcurrency } from './uitils/money.js';
+import { backendUrl } from '../data/backend.js';
 
 function getOrderTotal(order) {
   return order.cart.reduce((total, cartItem) => {
@@ -84,7 +85,7 @@ async function loadOrdersPage() {
 
   try {
     await loadProductsfetch();
-    const response = await fetch('http://localhost:8000/me/orders', {
+    const response = await fetch(`${backendUrl}/me/orders`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const payload = await response.json();

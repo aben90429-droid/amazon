@@ -1,5 +1,6 @@
 import { cart, loadCart } from '../data/cart.js';
 import { products, loadProductsfetch } from '../data/products.js';
+import { backendUrl } from '../data/backend.js';
 
 async function loadPage() {
   try {
@@ -110,7 +111,7 @@ async function renderTracking() {
 async function loadSavedOrder(orderId) {
   const token = localStorage.getItem('topazionToken');
   if (!token) return null;
-  const response = await fetch('http://localhost:8000/me/orders', {
+  const response = await fetch(`${backendUrl}/me/orders`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   if (!response.ok) return null;

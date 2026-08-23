@@ -3,6 +3,7 @@ import { getproduct, products } from "../../data/products.js";
 import { getdeliveryoption } from "../../data/delivery.js";
 import { formatcurrency } from "../uitils/money.js  ";
 import { notifyError } from "../../data/backend.js";
+import { backendUrl } from "../../data/backend.js";
 export function renderPaymatsummery() {
   let productpriceCents = 0;
   let shippingpriceCents = 0;
@@ -62,7 +63,7 @@ export function renderPaymatsummery() {
   document.querySelector('.js-place-order').addEventListener('click', async () => {
     try{
       const orderCart = cart.map((cartItem) => ({ ...cartItem }));
-      const response = await fetch('http://localhost:8000/orders', {
+      const response = await fetch(`${backendUrl}/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

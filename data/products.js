@@ -1,6 +1,7 @@
 import { formatcurrency } from '../scripts/uitils/money.js';
 import { setProductCatalog } from './cart.js';
 import { notifyError } from './backend.js';
+import { backendUrl } from './backend.js';
 
 
 
@@ -71,7 +72,7 @@ console.log(date.toLocaleString());
 export let products = []
 export function loadProductsfetch() {
   const promise =fetch(
-    'http://localhost:8000/products').then
+    `${backendUrl}/products`).then
 
   ((response) =>{
     return response.json();
@@ -113,7 +114,7 @@ fun();
   xhr.addEventListener('error', (error) => {
     notifyError(error);
   });
-  xhr.open('GET', 'http://localhost:8000/products');
+  xhr.open('GET', `${backendUrl}/products`);
   xhr.send();
 }
 
