@@ -1,15 +1,26 @@
 import { cart, clearCart } from "../../data/cart.js";
 import { getproduct, products } from "../../data/products.js";
 import { getdeliveryoption } from "../../data/delivery.js";
-import { formatcurrency } from "../uitils/money.js  ";
+import { formatcurrency } from "../uitils/money.js";
 import { notifyError } from "../../data/backend.js";
 import { backendUrl } from "../../data/backend.js";
 export function renderPaymatsummery() {
+  const summaryElement = document.querySelector('.js-payment-summary');
+  if (!summaryElement) return;
+
+  if (cart.length === 0) {
+    summaryElement.innerHTML = `
+      <div class="payment-summary-title">No items to order</div>
+      <p>Add a product to your cart before placing an order.</p>`;
+    return;
+  }
+
   let productpriceCents = 0;
   let shippingpriceCents = 0;
 
   cart.forEach((cartItem) => {
     const product = getproduct(cartItem.productId);
+    if (!product) return;
     productpriceCents += product.priceCents * cartItem.quantity;
 
     const deliveryOption = getdeliveryoption(cartItem.deliveryOptionId);
@@ -58,9 +69,12 @@ export function renderPaymatsummery() {
   `
 
 
-  document.querySelector('.js-payment-summary').innerHTML = paymentSumaryHTMl;
+  summaryElement.innerHTML = paymentSumaryHTMl;
 
   document.querySelector('.js-place-order').addEventListener('click', async () => {
+    const placeOrderButton = document.querySelector('.js-place-order');
+    placeOrderButton.disabled = true;
+    placeOrderButton.textContent = 'Placing order...';
     try{
       const orderCart = cart.map((cartItem) => ({ ...cartItem }));
       const response = await fetch(`${backendUrl}/orders`, {
@@ -85,6 +99,8 @@ window.location.href = 'orders.html';
     }
     catch(error){
       notifyError(error);
+      placeOrderButton.disabled = false;
+      placeOrderButton.textContent = 'Place your order';
     }
   })
 }

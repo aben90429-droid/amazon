@@ -49,6 +49,8 @@ export function renderOrderSummary() {
 
     const matchingproduct = getproduct(productId);
 
+    if (!matchingproduct) return;
+
     const deliveryOptionId = cartItem.deliveryOptionId;
 
     let deliveryOption = getdeliveryoption(deliveryOptionId);
@@ -105,7 +107,12 @@ export function renderOrderSummary() {
 
   const orderSummaryElement = document.querySelector('.js-order-summary');
   if (orderSummaryElement) {
-    orderSummaryElement.innerHTML = cartsummaryHTML;
+    orderSummaryElement.innerHTML = cartsummaryHTML || `
+      <div class="empty-cart-message">
+        <h2>Your cart is empty</h2>
+        <p>Add products from the store before checking out.</p>
+        <a class="button-secondary" href="amazon.html">Continue shopping</a>
+      </div>`;
   } else {
     console.warn('Order summary container not found: .js-order-summary');
   }

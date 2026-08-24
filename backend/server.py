@@ -430,32 +430,45 @@ def create_order():
     items = payload.get("cart")
     if not isinstance(items, list) or not items:
         return error("An order must contain at least one product.")
+    quantities: dict[str, int] = {}
+    normalized_items: list[dict[str, Any]] = []
+    for item in items:
+        product_id = item.get("productId") if isinstance(item, dict) else None
+        quantity = item.get("quantity") if isinstance(item, dict) else None
+        if not isinstance(product_id, str) or not product_id:
+            return error("Every order item must have a product id.")
+        if not isinstance(quantity, int) or quantity < 1:
+            return error("Every order quantity must be a positive whole number.")
+        quantities[product_id] = quantities.get(product_id, 0) + quantity
+        if not any(existing["productId"] == product_id for existing in normalized_items):
+            normalized_items.append({"productId": product_id, "quantity": quantity})
+        else:
+            for normalized_item in normalized_items:
+                if normalized_item["productId"] == product_id:
+                    normalized_item["quantity"] += quantity
+                    break
     order_id = str(uuid4())
     try:
         with get_connection() as connection:
             connection.execute("BEGIN IMMEDIATE")
-            for item in items:
-                product_id = item.get("productId") if isinstance(item, dict) else None
-                quantity = item.get("quantity") if isinstance(item, dict) else None
-                if not isinstance(quantity, int) or quantity < 1:
-                    return error("Every order quantity must be a positive whole number.")
+            for product_id, quantity in quantities.items():
                 row = connection.execute("SELECT name, stock FROM products WHERE id = ?", (product_id,)).fetchone()
                 if row is None:
                     return error(f"Product {product_id} does not exist.", 404)
                 if quantity > row["stock"]:
                     return error(f"Only {row['stock']} unit(s) of {row['name']} are available.", 409)
-            for item in items:
+            for product_id, quantity in quantities.items():
                 connection.execute(
                     "UPDATE products SET stock = stock - ? WHERE id = ?",
-                    (item["quantity"], item["productId"]),
+                    (quantity, product_id),
                 )
             connection.execute(
                 "INSERT INTO orders (id, user_id, items) VALUES (?, ?, ?)",
-                (order_id, g.current_user["id"], json.dumps(items)),
+                (order_id, g.current_user["id"], json.dumps(normalized_items)),
             )
     except sqlite3.Error as database_error:
         return error(f"Could not place the order: {database_error}", 500)
-    return jsonify({"orderId": order_id, "cart": items}), 201
+    return jsonify({"orderId": order_id, "cart": normalized_items}), 201
 
 
 @app.get("/me/orders")
