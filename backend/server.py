@@ -216,6 +216,37 @@ def login():
     return jsonify({"token": token, "user": user_to_dict(user)})
 
 
+@app.post("/auth/signup")
+def signup():
+    payload = request.get_json(silent=True) or {}
+    username = (payload.get("username") or "").strip().lower()
+    password = payload.get("password") or ""
+    display_name = (payload.get("displayName") or payload.get("display_name") or username or "Customer").strip()
+
+    if not username:
+        return error("Username is required.")
+    if len(username) < 3:
+        return error("Username must be at least 3 characters long.")
+    if len(password) < 6:
+        return error("Password must be at least 6 characters long.")
+    if not display_name:
+        return error("Display name is required.")
+
+    with get_connection() as connection:
+        existing = connection.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone()
+        if existing is not None:
+            return error("This username is already taken. Please choose another one.", 409)
+        cursor = connection.execute(
+            "INSERT INTO users (username, password_hash, display_name, role) VALUES (?, ?, ?, ?)",
+            (username, generate_password_hash(password), display_name, "customer"),
+        )
+        user = connection.execute("SELECT * FROM users WHERE id = ?", (cursor.lastrowid,)).fetchone()
+        token = secrets.token_urlsafe(32)
+        connection.execute("INSERT INTO login_sessions (token, user_id) VALUES (?, ?)", (token, user["id"]))
+
+    return jsonify({"token": token, "user": user_to_dict(user)}), 201
+
+
 @app.get("/auth/me")
 @require_user
 def current_user():
