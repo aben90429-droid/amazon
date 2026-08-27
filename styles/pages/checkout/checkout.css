@@ -32,6 +32,15 @@
   align-items: start;
 }
 
+.checkout-information { background: rgb(247, 250, 250); border: 1px solid rgb(222, 222, 222); border-radius: 4px; display: grid; gap: 12px; margin-bottom: 12px; padding: 18px; }
+.checkout-information h2 { font-size: 18px; margin: 0 0 4px; }
+.checkout-information label { display: grid; gap: 6px; font-weight: 500; }
+.checkout-information input, .checkout-information textarea { border: 1px solid rgb(213, 217, 217); font: inherit; padding: 10px; }
+.checkout-information textarea { min-height: 80px; resize: vertical; }
+.payment-choice { align-items: center; display: flex !important; gap: 8px !important; }
+.payment-choice input { width: auto; }
+.checkout-note { color: rgb(108, 119, 114); font-size: 13px; }
+
 @media (max-width: 1000px) {
   .main {
     max-width: 500px;

@@ -113,6 +113,12 @@ def initialize_database() -> None:
                 items TEXT NOT NULL,
                 status TEXT NOT NULL DEFAULT 'processing',
                 refund_status TEXT NOT NULL DEFAULT 'not_requested',
+                customer_name TEXT,
+                customer_email TEXT,
+                shipping_address TEXT,
+                payment_method TEXT NOT NULL DEFAULT 'demo',
+                payment_status TEXT NOT NULL DEFAULT 'paid',
+                total_cents INTEGER NOT NULL DEFAULT 0,
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
@@ -150,6 +156,13 @@ def initialize_database() -> None:
             connection.execute("ALTER TABLE orders ADD COLUMN status TEXT NOT NULL DEFAULT 'processing'")
         if "refund_status" not in order_columns:
             connection.execute("ALTER TABLE orders ADD COLUMN refund_status TEXT NOT NULL DEFAULT 'not_requested'")
+        for column, definition in (
+            ("customer_name", "TEXT"), ("customer_email", "TEXT"),
+            ("shipping_address", "TEXT"), ("payment_method", "TEXT NOT NULL DEFAULT 'demo'"),
+            ("payment_status", "TEXT NOT NULL DEFAULT 'paid'"), ("total_cents", "INTEGER NOT NULL DEFAULT 0"),
+        ):
+            if column not in order_columns:
+                connection.execute(f"ALTER TABLE orders ADD COLUMN {column} {definition}")
         seed_users(connection)
         product_count = connection.execute("SELECT COUNT(*) FROM products").fetchone()[0]
         if product_count == 0:
@@ -513,6 +526,18 @@ def create_order():
     items = payload.get("cart")
     if not isinstance(items, list) or not items:
         return error("An order must contain at least one product.")
+    customer_name = (payload.get("customerName") or "").strip()
+    customer_email = (payload.get("customerEmail") or "").strip().lower()
+    shipping_address = (payload.get("shippingAddress") or "").strip()
+    payment_method = payload.get("paymentMethod")
+    if not customer_name or len(customer_name) > 120:
+        return error("A valid customer name is required.")
+    if "@" not in customer_email or len(customer_email) > 200:
+        return error("A valid customer email is required.")
+    if not shipping_address or len(shipping_address) > 500:
+        return error("A valid shipping address is required.")
+    if payment_method != "demo":
+        return error("Only the demo payment method is available until a payment provider is connected.")
     quantities: dict[str, int] = {}
     normalized_items: list[dict[str, Any]] = []
     for item in items:
@@ -531,6 +556,7 @@ def create_order():
                     normalized_item["quantity"] += quantity
                     break
     order_id = str(uuid4())
+    total_cents = 0
     try:
         with get_connection() as connection:
             connection.execute("BEGIN IMMEDIATE")
@@ -540,14 +566,18 @@ def create_order():
                     return error(f"Product {product_id} does not exist.", 404)
                 if quantity > row["stock"]:
                     return error(f"Only {row['stock']} unit(s) of {row['name']} are available.", 409)
+                product_row = connection.execute("SELECT price_cents FROM products WHERE id = ?", (product_id,)).fetchone()
+                delivery_prices = {"1": 0, "2": 499, "3": 999}
+                total_cents += (product_row["price_cents"] + delivery_prices.get(next((item.get("deliveryOptionId", "1") for item in items if item.get("productId") == product_id), "1"), 0)) * quantity
             for product_id, quantity in quantities.items():
                 connection.execute(
                     "UPDATE products SET stock = stock - ? WHERE id = ?",
                     (quantity, product_id),
                 )
+            total_cents = round(total_cents * 1.1)
             connection.execute(
-                "INSERT INTO orders (id, user_id, items, status) VALUES (?, ?, ?, ?)",
-                (order_id, g.current_user["id"], json.dumps(normalized_items), "processing"),
+                "INSERT INTO orders (id, user_id, items, status, customer_name, customer_email, shipping_address, payment_method, payment_status, total_cents) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (order_id, g.current_user["id"], json.dumps(normalized_items), "processing", customer_name, customer_email, shipping_address, payment_method, "paid", total_cents),
             )
     except sqlite3.Error as database_error:
         return error(f"Could not place the order: {database_error}", 500)
@@ -559,11 +589,11 @@ def create_order():
 def get_my_orders():
     with get_connection() as connection:
         rows = connection.execute(
-            "SELECT id, items, status, refund_status, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC",
+            "SELECT id, items, status, refund_status, payment_status, total_cents, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC",
             (g.current_user["id"],),
         ).fetchall()
     return jsonify([
-        {"orderId": row["id"], "cart": json.loads(row["items"]), "status": row["status"], "refundStatus": row["refund_status"], "createdAt": row["created_at"]}
+        {"orderId": row["id"], "cart": json.loads(row["items"]), "status": row["status"], "refundStatus": row["refund_status"], "paymentStatus": row["payment_status"], "totalCents": row["total_cents"], "createdAt": row["created_at"]}
         for row in rows
     ])
 
@@ -581,6 +611,7 @@ def list_all_orders():
     return jsonify([{
         "orderId": row["id"], "cart": json.loads(row["items"]), "status": row["status"],
         "refundStatus": row["refund_status"], "createdAt": row["created_at"],
+        "paymentStatus": row["payment_status"], "totalCents": row["total_cents"],
         "username": row["username"], "displayName": row["display_name"],
     } for row in rows])
 

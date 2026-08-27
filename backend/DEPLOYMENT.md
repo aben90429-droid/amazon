@@ -7,6 +7,8 @@
 - Keep the database and logs outside public web directories.
 - Do not use the seeded test accounts in production.
 - Store secrets and configuration in environment variables.
+- The current checkout uses a deliberately non-financial `demo` payment method. Do not present it as real payment in production.
+- Before accepting money, integrate a provider such as Stripe with server-side payment intents, webhooks, idempotency keys, and provider-managed refunds. Never send raw card numbers to this application.
 
 ## Health and logs
 

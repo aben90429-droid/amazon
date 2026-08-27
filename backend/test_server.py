@@ -58,6 +58,15 @@ class ServerTestCase(unittest.TestCase):
         self.owner_headers = {"Authorization": f"Bearer {owner_login.get_json()['token']}"}
         self.product = self.client.get("/products").get_json()[0]
 
+    def order_payload(self, quantity=1):
+        return {
+            "cart": [{"productId": self.product["id"], "quantity": quantity}],
+            "customerName": "Maya Test",
+            "customerEmail": "maya@example.com",
+            "shippingAddress": "123 Market Street",
+            "paymentMethod": "demo",
+        }
+
     def test_duplicate_order_lines_are_aggregated_before_stock_check(self):
         stock = self.product["stock"]
         response = self.client.post(
@@ -67,7 +76,9 @@ class ServerTestCase(unittest.TestCase):
                 "cart": [
                     {"productId": self.product["id"], "quantity": stock},
                     {"productId": self.product["id"], "quantity": 1},
-                ]
+                ],
+                "customerName": "Maya Test", "customerEmail": "maya@example.com",
+                "shippingAddress": "123 Market Street", "paymentMethod": "demo",
             },
         )
 
@@ -83,10 +94,11 @@ class ServerTestCase(unittest.TestCase):
             "/orders",
             headers=self.headers,
             json={
+                **self.order_payload(2),
                 "cart": [
                     {"productId": self.product["id"], "quantity": 2},
                     {"productId": self.product["id"], "quantity": 1},
-                ]
+                ],
             },
         )
 
@@ -100,7 +112,7 @@ class ServerTestCase(unittest.TestCase):
         stock = self.product["stock"]
         order = self.client.post(
             "/orders", headers=self.headers,
-            json={"cart": [{"productId": self.product["id"], "quantity": 2}]},
+            json=self.order_payload(2),
         ).get_json()
         response = self.client.post(
             f"/me/orders/{order['orderId']}/cancel", headers=self.headers
@@ -116,7 +128,7 @@ class ServerTestCase(unittest.TestCase):
     def test_owner_can_update_order_status(self):
         order = self.client.post(
             "/orders", headers=self.headers,
-            json={"cart": [{"productId": self.product["id"], "quantity": 1}]},
+            json=self.order_payload(),
         ).get_json()
         response = self.client.patch(
             f"/admin/orders/{order['orderId']}", headers=self.owner_headers,
@@ -128,7 +140,7 @@ class ServerTestCase(unittest.TestCase):
     def test_owner_can_update_refund_after_cancellation(self):
         order = self.client.post(
             "/orders", headers=self.headers,
-            json={"cart": [{"productId": self.product["id"], "quantity": 1}]},
+            json=self.order_payload(),
         ).get_json()
         self.client.post(f"/me/orders/{order['orderId']}/cancel", headers=self.headers)
         response = self.client.patch(
@@ -210,6 +222,25 @@ class ServerTestCase(unittest.TestCase):
         response = self.client.get("/health")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json(), {"status": "ok"})
+
+    def test_order_requires_customer_information_and_demo_payment(self):
+        missing_information = self.client.post(
+            "/orders", headers=self.headers,
+            json={"cart": [{"productId": self.product["id"], "quantity": 1}]},
+        )
+        self.assertEqual(missing_information.status_code, 400)
+        real_payment = self.client.post(
+            "/orders", headers=self.headers,
+            json={**self.order_payload(), "paymentMethod": "card"},
+        )
+        self.assertEqual(real_payment.status_code, 400)
+
+    def test_order_stores_server_calculated_total_and_payment_status(self):
+        response = self.client.post("/orders", headers=self.headers, json=self.order_payload())
+        self.assertEqual(response.status_code, 201)
+        order = self.client.get("/me/orders", headers=self.headers).get_json()[0]
+        self.assertEqual(order["paymentStatus"], "paid")
+        self.assertEqual(order["totalCents"], round(self.product["priceCents"] * 1.1))
 
     def test_customer_can_save_wishlist_and_review_product_once(self):
         wishlist = self.client.put(
