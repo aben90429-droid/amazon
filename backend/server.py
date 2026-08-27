@@ -103,11 +103,45 @@ def initialize_database() -> None:
                 id TEXT PRIMARY KEY,
                 user_id INTEGER NOT NULL,
                 items TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'processing',
+                refund_status TEXT NOT NULL DEFAULT 'not_requested',
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
             """
         )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS wishlists (
+                user_id INTEGER NOT NULL,
+                product_id TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, product_id),
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (product_id) REFERENCES products(id)
+            )
+            """
+        )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS reviews (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                product_id TEXT NOT NULL,
+                rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+                review TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE (user_id, product_id),
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (product_id) REFERENCES products(id)
+            )
+            """
+        )
+        order_columns = {row[1] for row in connection.execute("PRAGMA table_info(orders)").fetchall()}
+        if "status" not in order_columns:
+            connection.execute("ALTER TABLE orders ADD COLUMN status TEXT NOT NULL DEFAULT 'processing'")
+        if "refund_status" not in order_columns:
+            connection.execute("ALTER TABLE orders ADD COLUMN refund_status TEXT NOT NULL DEFAULT 'not_requested'")
         seed_users(connection)
         product_count = connection.execute("SELECT COUNT(*) FROM products").fetchone()[0]
         if product_count == 0:
@@ -282,8 +316,8 @@ def save_my_cart():
     items = payload.get("items")
     if not isinstance(items, list):
         return error("Cart items must be a list.")
+    validated_items: list[tuple[str, int]] = []
     with get_connection() as connection:
-        connection.execute("DELETE FROM user_cart WHERE user_id = ?", (g.current_user["id"],))
         for item in items:
             product_id = item.get("productId") if isinstance(item, dict) else None
             quantity = item.get("quantity") if isinstance(item, dict) else None
@@ -294,6 +328,9 @@ def save_my_cart():
                 return error(f"Product {product_id} does not exist.", 404)
             if quantity > product["stock"]:
                 return error(f"Only {product['stock']} unit(s) are available.", 409)
+            validated_items.append((product_id, quantity))
+        connection.execute("DELETE FROM user_cart WHERE user_id = ?", (g.current_user["id"],))
+        for product_id, quantity in validated_items:
             connection.execute(
                 "INSERT INTO user_cart (user_id, product_id, quantity) VALUES (?, ?, ?)",
                 (g.current_user["id"], product_id, quantity),
@@ -468,7 +505,7 @@ def create_order():
             return error("Every order quantity must be a positive whole number.")
         quantities[product_id] = quantities.get(product_id, 0) + quantity
         if not any(existing["productId"] == product_id for existing in normalized_items):
-            normalized_items.append({"productId": product_id, "quantity": quantity})
+            normalized_items.append({"productId": product_id, "quantity": quantity, "deliveryOptionId": item.get("deliveryOptionId", "1")})
         else:
             for normalized_item in normalized_items:
                 if normalized_item["productId"] == product_id:
@@ -490,8 +527,8 @@ def create_order():
                     (quantity, product_id),
                 )
             connection.execute(
-                "INSERT INTO orders (id, user_id, items) VALUES (?, ?, ?)",
-                (order_id, g.current_user["id"], json.dumps(normalized_items)),
+                "INSERT INTO orders (id, user_id, items, status) VALUES (?, ?, ?, ?)",
+                (order_id, g.current_user["id"], json.dumps(normalized_items), "processing"),
             )
     except sqlite3.Error as database_error:
         return error(f"Could not place the order: {database_error}", 500)
@@ -503,13 +540,136 @@ def create_order():
 def get_my_orders():
     with get_connection() as connection:
         rows = connection.execute(
-            "SELECT id, items, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC",
+            "SELECT id, items, status, refund_status, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC",
             (g.current_user["id"],),
         ).fetchall()
     return jsonify([
-        {"orderId": row["id"], "cart": json.loads(row["items"]), "createdAt": row["created_at"]}
+        {"orderId": row["id"], "cart": json.loads(row["items"]), "status": row["status"], "refundStatus": row["refund_status"], "createdAt": row["created_at"]}
         for row in rows
     ])
+
+
+ORDER_STATUSES = {"processing", "shipped", "delivered", "cancelled"}
+
+
+@app.post("/me/orders/<order_id>/cancel")
+@require_user
+def cancel_order(order_id: str):
+    try:
+        with get_connection() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            order = connection.execute(
+                "SELECT status, items FROM orders WHERE id = ? AND user_id = ?",
+                (order_id, g.current_user["id"]),
+            ).fetchone()
+            if order is None:
+                return error("Order was not found.", 404)
+            if order["status"] != "processing":
+                return error("Only processing orders can be cancelled.", 409)
+            for item in json.loads(order["items"]):
+                connection.execute(
+                    "UPDATE products SET stock = stock + ? WHERE id = ?",
+                    (item["quantity"], item["productId"]),
+                )
+            connection.execute(
+                "UPDATE orders SET status = 'cancelled', refund_status = 'requested' WHERE id = ?",
+                (order_id,),
+            )
+    except sqlite3.Error as database_error:
+        return error(f"Could not cancel the order: {database_error}", 500)
+    return jsonify({"orderId": order_id, "status": "cancelled", "refundStatus": "requested"})
+
+
+@app.patch("/admin/orders/<order_id>")
+@require_owner
+def update_order_status(order_id: str):
+    payload = request.get_json(silent=True) or {}
+    status = payload.get("status")
+    if status not in ORDER_STATUSES:
+        return error(f"Status must be one of: {', '.join(sorted(ORDER_STATUSES))}.")
+    with get_connection() as connection:
+        result = connection.execute("UPDATE orders SET status = ? WHERE id = ?", (status, order_id))
+    if result.rowcount == 0:
+        return error("Order was not found.", 404)
+    return jsonify({"orderId": order_id, "status": status})
+
+
+@app.patch("/admin/orders/<order_id>/refund")
+@require_owner
+def update_refund_status(order_id: str):
+    payload = request.get_json(silent=True) or {}
+    refund_status = payload.get("refundStatus")
+    if refund_status not in {"approved", "rejected"}:
+        return error("Refund status must be approved or rejected.")
+    with get_connection() as connection:
+        result = connection.execute(
+            "UPDATE orders SET refund_status = ? WHERE id = ? AND status = 'cancelled'",
+            (refund_status, order_id),
+        )
+    if result.rowcount == 0:
+        return error("Only cancelled orders can have their refund updated.", 409)
+    return jsonify({"orderId": order_id, "refundStatus": refund_status})
+
+
+@app.get("/products/<product_id>/reviews")
+def list_reviews(product_id: str):
+    with get_connection() as connection:
+        rows = connection.execute(
+            """SELECT reviews.rating, reviews.review, reviews.created_at, users.display_name
+               FROM reviews JOIN users ON users.id = reviews.user_id
+               WHERE reviews.product_id = ? ORDER BY reviews.created_at DESC""",
+            (product_id,),
+        ).fetchall()
+    return jsonify([{"rating": row["rating"], "review": row["review"], "displayName": row["display_name"], "createdAt": row["created_at"]} for row in rows])
+
+
+@app.post("/products/<product_id>/reviews")
+@require_user
+def create_review(product_id: str):
+    payload = request.get_json(silent=True) or {}
+    rating = payload.get("rating")
+    review = (payload.get("review") or "").strip()
+    if not isinstance(rating, int) or rating not in range(1, 6):
+        return error("Rating must be a whole number from 1 to 5.")
+    if not review or len(review) > 1000:
+        return error("Review must be between 1 and 1000 characters.")
+    with get_connection() as connection:
+        if connection.execute("SELECT id FROM products WHERE id = ?", (product_id,)).fetchone() is None:
+            return error("Product was not found.", 404)
+        try:
+            connection.execute(
+                "INSERT INTO reviews (user_id, product_id, rating, review) VALUES (?, ?, ?, ?)",
+                (g.current_user["id"], product_id, rating, review),
+            )
+        except sqlite3.IntegrityError:
+            return error("You already reviewed this product.", 409)
+    return jsonify({"rating": rating, "review": review}), 201
+
+
+@app.get("/me/wishlist")
+@require_user
+def get_wishlist():
+    with get_connection() as connection:
+        rows = connection.execute("SELECT product_id FROM wishlists WHERE user_id = ? ORDER BY created_at DESC", (g.current_user["id"],)).fetchall()
+    return jsonify([row["product_id"] for row in rows])
+
+
+@app.put("/me/wishlist/<product_id>")
+@require_user
+def add_wishlist(product_id: str):
+    with get_connection() as connection:
+        if connection.execute("SELECT id FROM products WHERE id = ?", (product_id,)).fetchone() is None:
+            return error("Product was not found.", 404)
+        connection.execute("INSERT OR IGNORE INTO wishlists (user_id, product_id) VALUES (?, ?)", (g.current_user["id"], product_id))
+    return jsonify({"productId": product_id, "saved": True})
+
+
+@app.delete("/me/wishlist/<product_id>")
+@require_user
+def remove_wishlist(product_id: str):
+    with get_connection() as connection:
+        connection.execute("DELETE FROM wishlists WHERE user_id = ? AND product_id = ?", (g.current_user["id"], product_id))
+    return jsonify({"productId": product_id, "saved": False})
 
 
 @app.get("/cart")
