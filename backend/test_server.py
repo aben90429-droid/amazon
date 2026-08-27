@@ -231,6 +231,20 @@ class ServerTestCase(unittest.TestCase):
         )
         self.assertEqual(duplicate.status_code, 409)
 
+    def test_security_controls_and_owner_orders(self):
+        health = self.client.get("/health")
+        self.assertEqual(health.headers["X-Content-Type-Options"], "nosniff")
+        self.assertEqual(health.headers["X-Frame-Options"], "DENY")
+        orders = self.client.get("/admin/orders", headers=self.owner_headers)
+        self.assertEqual(orders.status_code, 200)
+
+    def test_invalid_owner_order_status_is_rejected(self):
+        response = self.client.patch(
+            "/admin/orders/missing", headers=self.owner_headers,
+            json={"status": "unknown"},
+        )
+        self.assertEqual(response.status_code, 400)
+
 
 if __name__ == "__main__":
     unittest.main()

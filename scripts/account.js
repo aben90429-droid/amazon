@@ -3,7 +3,8 @@ import { backendUrl } from '../data/backend.js';
 export function setupAccountMenu() {
   const accountName = document.querySelector('.js-account-name');
   const signOutButton = document.querySelector('.sign-out-button');
-  const user = JSON.parse(localStorage.getItem('topazionUser') || 'null');
+  let user;
+  try { user = JSON.parse(localStorage.getItem('topazionUser') || 'null'); } catch { user = null; }
 
   if (!accountName || !signOutButton) return;
 

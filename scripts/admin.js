@@ -1,4 +1,5 @@
 import { backendUrl } from '../data/backend.js';
+import { escapeHTML } from './uitils/sanitize.js';
 
 const API_URL = backendUrl;
 const signedInUser = JSON.parse(localStorage.getItem('topazionUser') || 'null');
@@ -12,6 +13,7 @@ if (!signedInUser || signedInUser.role !== 'owner') {
 const form = document.querySelector('#product-form');
 const productList = document.querySelector('#product-list');
 const statusElement = document.querySelector('#status');
+const orderList = document.querySelector('#order-list');
 
 function showStatus(message, isError = false) {
   statusElement.textContent = message;
@@ -46,10 +48,10 @@ function productPayload(formData) {
 
 function renderProducts(products) {
   productList.innerHTML = products.map((product) => `
-    <tr data-product-id="${product.id}">
-      <td><strong>${product.name}</strong><small>${product.id}</small></td>
+    <tr data-product-id="${escapeHTML(product.id)}">
+      <td><strong>${escapeHTML(product.name)}</strong><small>${escapeHTML(product.id)}</small></td>
       <td>$${(product.priceCents / 100).toFixed(2)}</td>
-      <td><input class="stock-input" type="number" min="0" value="${product.stock}" aria-label="Stock for ${product.name}"></td>
+      <td><input class="stock-input" type="number" min="0" value="${product.stock}" aria-label="Stock for ${escapeHTML(product.name)}"></td>
       <td class="actions"><button class="save-button" type="button">Save stock</button><button class="delete-button" type="button">Delete</button></td>
     </tr>`).join('');
 }
@@ -61,6 +63,14 @@ async function loadProducts() {
   } catch (error) {
     showStatus(error.message, true);
   }
+}
+
+function renderOrders(orders) {
+  orderList.innerHTML = orders.length ? orders.map((order) => `<tr data-order-id="${escapeHTML(order.orderId)}"><td><strong>${escapeHTML(order.orderId.slice(0, 8))}</strong><small>${escapeHTML(order.createdAt)}</small></td><td>${escapeHTML(order.displayName)}<small>@${escapeHTML(order.username)}</small></td><td><select class="order-status" aria-label="Status for order ${escapeHTML(order.orderId.slice(0, 8))}"><option ${order.status === 'processing' ? 'selected' : ''}>processing</option><option ${order.status === 'shipped' ? 'selected' : ''}>shipped</option><option ${order.status === 'delivered' ? 'selected' : ''}>delivered</option><option ${order.status === 'cancelled' ? 'selected' : ''}>cancelled</option></select></td><td>${escapeHTML(order.refundStatus)}</td><td>${order.refundStatus === 'requested' ? '<button class="approve-refund" type="button">Approve refund</button><button class="reject-refund" type="button">Reject refund</button>' : '-'}</td></tr>`).join('') : '<tr><td colspan="5">No orders yet.</td></tr>';
+}
+
+async function loadOrders() {
+  try { renderOrders(await apiRequest('/admin/orders')); } catch (error) { showStatus(error.message, true); }
 }
 
 form.addEventListener('submit', async (event) => {
@@ -96,4 +106,17 @@ productList.addEventListener('click', async (event) => {
   }
 });
 
+orderList.addEventListener('change', async (event) => {
+  if (!event.target.classList.contains('order-status')) return;
+  try { await apiRequest(`/admin/orders/${event.target.closest('tr').dataset.orderId}`, { method: 'PATCH', body: JSON.stringify({ status: event.target.value }) }); showStatus('Order status updated'); } catch (error) { showStatus(error.message, true); await loadOrders(); }
+});
+
+orderList.addEventListener('click', async (event) => {
+  if (!event.target.classList.contains('approve-refund') && !event.target.classList.contains('reject-refund')) return;
+  const refundStatus = event.target.classList.contains('approve-refund') ? 'approved' : 'rejected';
+  try { await apiRequest(`/admin/orders/${event.target.closest('tr').dataset.orderId}/refund`, { method: 'PATCH', body: JSON.stringify({ refundStatus }) }); showStatus('Refund updated'); await loadOrders(); } catch (error) { showStatus(error.message, true); }
+});
+
 document.querySelector('#refresh-button').addEventListener('click', loadProducts);
+document.querySelector('#refresh-orders-button').addEventListener('click', loadOrders);
+loadOrders();

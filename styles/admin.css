@@ -32,4 +32,6 @@ td small { color: var(--muted); font-size: 11px; margin-top: 4px; }
 .actions { white-space: nowrap; }
 .delete-button { background: transparent; color: var(--accent-dark); margin-left: 8px; }
 .delete-button:hover { background: #f9e3da; }
+.approve-refund, .reject-refund { font-size: 12px; margin: 2px; padding: 7px 9px; }
+.reject-refund { background: transparent; color: var(--accent-dark); }
 @media (max-width: 640px) { .admin-shell { padding: 32px 14px; } .admin-header { align-items: start; flex-direction: column; } .product-form { grid-template-columns: 1fr; } .wide { grid-column: auto; } .panel { padding: 16px; } }

@@ -41,6 +41,12 @@ async function setupWishlist() {
   const token = localStorage.getItem('topazionToken');
   if (token) {
     const response = await fetch(`${backendUrl}/me/wishlist`, { headers: { Authorization: `Bearer ${token}` } });
+    if (response.status === 401) {
+      localStorage.removeItem('topazionToken');
+      localStorage.removeItem('topazionUser');
+      button.textContent = 'Save to wishlist';
+      return;
+    }
     const saved = await response.json();
     button.setAttribute('aria-pressed', String(saved.includes(productId)));
     button.textContent = saved.includes(productId) ? 'Saved to wishlist' : 'Save to wishlist';

@@ -5,6 +5,7 @@ import logging
 import os
 import secrets
 import sqlite3
+import time
 from logging.handlers import RotatingFileHandler
 from functools import wraps
 from pathlib import Path
@@ -25,6 +26,10 @@ handler = RotatingFileHandler(LOG_FILE, maxBytes=1_000_000, backupCount=5, encod
 handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
 app.logger.addHandler(handler)
 app.logger.setLevel(logging.INFO)
+LOGIN_WINDOW_SECONDS = 300
+MAX_LOGIN_ATTEMPTS = 10
+SESSION_MAX_AGE_SECONDS = 60 * 60 * 24
+login_attempts: dict[str, list[float]] = {}
 
 
 @app.after_request
@@ -33,6 +38,9 @@ def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = os.environ.get("CORS_ORIGIN", "http://localhost:8000")
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     return response
 
 
@@ -209,7 +217,7 @@ def require_user(handler):
         with get_connection() as connection:
             user = connection.execute(
                 """
-                SELECT users.* FROM users
+                SELECT users.*, login_sessions.created_at AS session_created_at FROM users
                 JOIN login_sessions ON login_sessions.user_id = users.id
                 WHERE login_sessions.token = ?
                 """,
@@ -217,6 +225,10 @@ def require_user(handler):
             ).fetchone()
         if user is None:
             return error("Your sign-in session is not valid.", 401)
+        if time.time() - time.mktime(time.strptime(user["session_created_at"], "%Y-%m-%d %H:%M:%S")) > SESSION_MAX_AGE_SECONDS:
+            with get_connection() as cleanup_connection:
+                cleanup_connection.execute("DELETE FROM login_sessions WHERE token = ?", (token,))
+            return error("Your sign-in session has expired.", 401)
         g.current_user = user
         return handler(*args, **kwargs)
     return wrapped
@@ -248,10 +260,17 @@ def login():
     password = payload.get("password", "")
     if not username or not password:
         return error("Username and password are required.")
+    now = time.time()
+    attempts = [attempt for attempt in login_attempts.get(username, []) if now - attempt < LOGIN_WINDOW_SECONDS]
+    if len(attempts) >= MAX_LOGIN_ATTEMPTS:
+        return error("Too many sign-in attempts. Please try again later.", 429)
     with get_connection() as connection:
         user = connection.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
         if user is None or not check_password_hash(user["password_hash"], password):
+            attempts.append(now)
+            login_attempts[username] = attempts
             return error("The username or password is incorrect.", 401)
+        login_attempts.pop(username, None)
         token = secrets.token_urlsafe(32)
         connection.execute("INSERT INTO login_sessions (token, user_id) VALUES (?, ?)", (token, user["id"]))
     return jsonify({"token": token, "user": user_to_dict(user)})
@@ -547,6 +566,23 @@ def get_my_orders():
         {"orderId": row["id"], "cart": json.loads(row["items"]), "status": row["status"], "refundStatus": row["refund_status"], "createdAt": row["created_at"]}
         for row in rows
     ])
+
+
+@app.get("/admin/orders")
+@require_owner
+def list_all_orders():
+    with get_connection() as connection:
+        rows = connection.execute(
+            """SELECT orders.id, orders.items, orders.status, orders.refund_status,
+                      orders.created_at, users.username, users.display_name
+               FROM orders JOIN users ON users.id = orders.user_id
+               ORDER BY orders.created_at DESC"""
+        ).fetchall()
+    return jsonify([{
+        "orderId": row["id"], "cart": json.loads(row["items"]), "status": row["status"],
+        "refundStatus": row["refund_status"], "createdAt": row["created_at"],
+        "username": row["username"], "displayName": row["display_name"],
+    } for row in rows])
 
 
 ORDER_STATUSES = {"processing", "shipped", "delivered", "cancelled"}
