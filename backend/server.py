@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import secrets
 import sqlite3
+from logging.handlers import RotatingFileHandler
 from functools import wraps
 from pathlib import Path
 from typing import Any
@@ -18,12 +20,17 @@ DATABASE_FILE = BASE_DIR / "topazion.sqlite3"
 PRODUCTS_FILE = BASE_DIR / "products.json"
 
 app = Flask(__name__)
+LOG_FILE = BASE_DIR / "topazion.log"
+handler = RotatingFileHandler(LOG_FILE, maxBytes=1_000_000, backupCount=5, encoding="utf-8")
+handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.INFO)
 
 
 @app.after_request
 def add_cors_headers(response):
-    print(f"{request.method} {request.path} -> {response.status_code}", flush=True)
-    response.headers["Access-Control-Allow-Origin"] = "*"
+    app.logger.info("%s %s -> %s", request.method, request.path, response.status_code)
+    response.headers["Access-Control-Allow-Origin"] = os.environ.get("CORS_ORIGIN", "http://localhost:8000")
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
     return response
@@ -321,6 +328,11 @@ def validate_product(payload: Any) -> str | None:
         return "Product name must be a non-empty string."
     if not isinstance(payload["image"], str) or not payload["image"].strip():
         return "Product image must be a non-empty string."
+    image_path = payload["image"].strip()
+    if not image_path.startswith("images/") or ".." in Path(image_path).parts:
+        return "Product image must be a local path inside the images folder."
+    if len(payload["name"].strip()) > 200 or len(image_path) > 300:
+        return "Product name or image path is too long."
     if not isinstance(payload["priceCents"], int) or payload["priceCents"] < 0:
         return "priceCents must be a non-negative integer."
     if not isinstance(payload["stock"], int) or payload["stock"] < 0:
@@ -329,6 +341,10 @@ def validate_product(payload: Any) -> str | None:
         return "Keywords must be a list of strings."
     if not isinstance(payload["rating"], dict):
         return "Rating must be an object."
+    if not isinstance(payload["rating"].get("stars"), (int, float)) or not 0 <= payload["rating"]["stars"] <= 5:
+        return "Rating stars must be between 0 and 5."
+    if not isinstance(payload["rating"].get("count"), int) or payload["rating"]["count"] < 0:
+        return "Rating count must be a non-negative whole number."
     return None
 
 
@@ -337,6 +353,17 @@ def list_products():
     with get_connection() as connection:
         rows = connection.execute("SELECT * FROM products ORDER BY rowid").fetchall()
     return jsonify([product_to_dict(row) for row in rows])
+
+
+@app.get("/health")
+def health_check():
+    try:
+        with get_connection() as connection:
+            connection.execute("SELECT 1").fetchone()
+        return jsonify({"status": "ok"})
+    except sqlite3.Error:
+        app.logger.exception("Health check database failure")
+        return jsonify({"status": "error"}), 503
 
 
 @app.post("/products")

@@ -2,6 +2,19 @@
   margin-top: 60px;
 }
 
+.catalog-toolbar { align-items: end; display: flex; justify-content: space-between; gap: 20px; padding: 28px 25px 18px; }
+.catalog-heading h1 { font-size: 28px; margin: 0 0 6px; }
+.results-count { color: rgb(108, 119, 114); font-size: 14px; }
+.catalog-controls { display: flex; gap: 12px; }
+.catalog-controls label { display: grid; gap: 5px; font-size: 12px; font-weight: 700; }
+.catalog-controls select { min-width: 150px; }
+.product-link { color: inherit; text-decoration: none; }
+.product-link:hover { color: rgb(196, 80, 0); }
+.pagination { display: flex; justify-content: center; gap: 8px; padding: 28px; }
+.page-button { background: white; border: 1px solid rgb(213, 217, 217); border-radius: 4px; min-width: 38px; padding: 8px 12px; }
+.page-button.active { background: rgb(19, 25, 33); color: white; }
+@media (max-width: 650px) { .catalog-toolbar { align-items: start; flex-direction: column; } .catalog-controls { width: 100%; } .catalog-controls label { flex: 1; } .catalog-controls select { min-width: 0; width: 100%; } }
+
 .products-grid {
   display: grid;
 

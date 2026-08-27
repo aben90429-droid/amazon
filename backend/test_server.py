@@ -50,6 +50,10 @@ class ServerTestCase(unittest.TestCase):
         )
         self.token = login.get_json()["token"]
         self.headers = {"Authorization": f"Bearer {self.token}"}
+        owner_login = self.client.post(
+            "/auth/login", json={"username": "owner", "password": "owner123"}
+        )
+        self.owner_headers = {"Authorization": f"Bearer {owner_login.get_json()['token']}"}
         self.product = self.client.get("/products").get_json()[0]
 
     def test_duplicate_order_lines_are_aggregated_before_stock_check(self):
@@ -128,6 +132,26 @@ class ServerTestCase(unittest.TestCase):
             json={"items": [{"productId": self.product["id"], "quantity": 0}]},
         )
         self.assertEqual(invalid_quantity.status_code, 400)
+
+    def test_product_validation_rejects_remote_image_paths(self):
+        response = self.client.post(
+            "/products",
+            headers=self.owner_headers,
+            json={
+                "name": "Unsafe image",
+                "image": "https://example.com/image.jpg",
+                "priceCents": 100,
+                "stock": 1,
+                "rating": {"stars": 4, "count": 1},
+                "keywords": ["test"],
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_health_endpoint_reports_database_status(self):
+        response = self.client.get("/health")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), {"status": "ok"})
 
 
 if __name__ == "__main__":
