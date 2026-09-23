@@ -1,9 +1,12 @@
 const localBackendUrl = 'http://localhost:8000';
 
 function getBackendUrl() {
-    const { hostname, protocol } = window.location;
+    const { hostname, protocol, origin } = window.location;
     if (hostname.endsWith('.devtunnels.ms')) {
         return `${protocol}//${hostname.replace('-5173.', '-8000.')}`;
+    }
+    if (protocol === 'http:' || protocol === 'https:') {
+        return origin;
     }
     return localBackendUrl;
 }

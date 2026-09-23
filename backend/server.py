@@ -757,8 +757,9 @@ def frontend_file(file_path: str):
     return send_from_directory(PROJECT_DIR, file_path.as_posix())
 
 
+initialize_database()
+
 if __name__ == "__main__":
-    initialize_database()
     port = int(os.environ.get("PORT", "8000"))
     print(f"Topazion Flask backend running on port {port}")
     app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
