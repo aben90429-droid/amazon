@@ -33,7 +33,7 @@ function renderProductsGrid() {
 
   if (visibleProducts.length === 0) {
     productHTML = `
-      <div class="no-results" style="grid-column: 1 / -1; padding: 40px 20px; text-align: center; color: rgb(108, 119, 114);">
+      <div class="no-results">
         No products match your search. Try a different keyword.
       </div>
     `;

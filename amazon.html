@@ -1,44 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <title>Topazion</title>
+  <meta charset="UTF-8">
+  <meta name="description" content="Discover thoughtful everyday finds for your home, wardrobe, and everything in between at Topazion.">
+  <meta name="theme-color" content="#17302d">
+  <title>Topazion | Everyday finds, made for living</title>
   <link rel="icon" type="image/jpeg" href="images/topazion-favicon.jpg">
 
-  <!-- This code is needed for responsive design to work.
-      (Responsive design = make the website look good on
-      smaller screen sizes like a phone or a tablet). -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Load a font called Roboto from Google Fonts. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Here are the CSS files for this page. -->
   <link rel="stylesheet" href="styles/shared/general.css">
   <link rel="stylesheet" href="styles/shared/amazon-header.css">
   <link rel="stylesheet" href="styles/pages/amazon.css">
 </head>
 
 <body>
-  <div class="amazon-header">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="amazon-header">
     <div class="amazon-header-left-section">
       <a href="amazon.html" class="header-link">
-        <img class="amazon-logo" src="images/topazion-header-mark.png" alt="Topazion">
-        <img class="amazon-mobile-logo" src="images/topazion-header-mark.png" alt="Topazion">
+        <img class="amazon-logo" src="images/topazion-header-mark.png" alt="Topazion home">
+        <img class="amazon-mobile-logo" src="images/topazion-header-mark.png" alt="Topazion home">
       </a>
     </div>
 
-    <div class="amazon-header-middle-section">
-      <input class="search-bar" type="text" placeholder="Search">
+    <form class="amazon-header-middle-section" role="search" onsubmit="return false;">
+      <input class="search-bar" type="search" placeholder="Search everyday finds" aria-label="Search products">
 
-      <button class="search-button">
-        <img class="search-icon" src="images/icons/search-icon.png">
+      <button class="search-button" type="submit" aria-label="Search">
+        <img class="search-icon" src="images/icons/search-icon.png" alt="">
       </button>
-    </div>
+    </form>
 
-    <div class="amazon-header-right-section">
+    <nav class="amazon-header-right-section" aria-label="Account and shopping">
       <details class="account-menu">
         <summary class="orders-link header-link js-account-name">Sign in</summary>
         <div class="account-dropdown">
@@ -51,23 +50,113 @@
       </a>
 
       <a class="cart-link header-link" href="checkout.html">
-        <img class="cart-icon" src="images/icons/cart-icon.png">
+        <img class="cart-icon" src="images/icons/cart-icon.png" alt="">
         <div class="cart-quantity js-cart-quantity js-cart-quantity2">0</div>
         <div class="cart-text">Cart</div>
       </a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <p class="eyebrow">A good find feels like home</p>
+        <h1 id="hero-title">Everyday finds.<br>Made for living.</h1>
+        <p class="hero-description">Welcome to Topazion — thoughtful picks for your home, your style, and all the little moments in between.</p>
+        <div class="hero-actions">
+          <a class="button-primary hero-primary-cta" href="#shop">Explore the collection</a>
+          <a class="button-secondary hero-secondary-cta" href="#discover">Get to know us</a>
+        </div>
+        <div class="hero-note">
+          <span class="hero-note-mark" aria-hidden="true">✦</span>
+          <span>Good things for the everyday</span>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-label="A few of our favorite everyday finds">
+        <div class="hero-art-orbit hero-art-orbit-one"></div>
+        <div class="hero-art-orbit hero-art-orbit-two"></div>
+        <div class="hero-product hero-product-main">
+          <img src="images/products/electric-glass-and-steel-hot-water-kettle.webp" alt="Glass and steel electric kettle">
+        </div>
+        <div class="hero-product hero-product-side">
+          <img src="images/products/men-athletic-shoes-green.jpg" alt="Green athletic shoes">
+        </div>
+        <div class="hero-product hero-product-small">
+          <img src="images/products/cotton-bath-towels-teal.webp" alt="Soft teal cotton towels">
+        </div>
+        <div class="hero-art-caption"><span>Little upgrades,</span><strong>a lot to love.</strong></div>
+      </div>
+    </section>
+
+    <section class="promise-strip" aria-label="The Topazion experience">
+      <div class="promise-item">
+        <span class="promise-icon" aria-hidden="true">⌕</span>
+        <div><strong>Find your new favorite</strong><span>Everyday picks, all in one place</span></div>
+      </div>
+      <div class="promise-item">
+        <span class="promise-icon" aria-hidden="true">♡</span>
+        <div><strong>Shop with confidence</strong><span>A straightforward, secure checkout</span></div>
+      </div>
+      <div class="promise-item">
+        <span class="promise-icon" aria-hidden="true">↗</span>
+        <div><strong>Keep things in reach</strong><span>Easy access to your orders</span></div>
+      </div>
+    </section>
+
+    <section class="discover-section" id="discover" aria-labelledby="discover-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">A little inspiration</p>
+          <h2 id="discover-title">Something for every day</h2>
+        </div>
+        <a class="section-link" href="#shop">Shop all finds <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="category-grid">
+        <a class="category-card category-home" href="#shop">
+          <div class="category-image"><img src="images/products/round-airtight-food-storage-containers.jpg" alt="Food storage containers" loading="lazy"></div>
+          <div class="category-card-copy"><span>Make room for</span><h3>Home essentials</h3><span class="category-arrow" aria-hidden="true">↗</span></div>
+        </a>
+        <a class="category-card category-style" href="#shop">
+          <div class="category-image"><img src="images/products/men-athletic-shoes-green.jpg" alt="Green athletic shoes" loading="lazy"></div>
+          <div class="category-card-copy"><span>Step into</span><h3>Everyday style</h3><span class="category-arrow" aria-hidden="true">↗</span></div>
+        </a>
+        <a class="category-card category-comfort" href="#shop">
+          <div class="category-image"><img src="images/products/blackout-curtain-set-beige.webp" alt="Neutral blackout curtains" loading="lazy"></div>
+          <div class="category-card-copy"><span>Settle into</span><h3>Little comforts</h3><span class="category-arrow" aria-hidden="true">↗</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="shop-section" id="shop" aria-labelledby="shop-title">
+      <div class="section-heading shop-heading">
+        <div>
+          <p class="eyebrow">Picked for you</p>
+          <h2 id="shop-title">Find your next favorite</h2>
+          <p class="shop-description">A thoughtful mix of useful, lovely, everyday things.</p>
+        </div>
+      </div>
+      <div class="products-grid js-product-grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-main">
+      <a href="amazon.html" class="footer-brand" aria-label="Topazion home">
+        <img src="images/topazion-header-mark.png" alt="">
+        <span>Thoughtful finds for the everyday.</span>
+      </a>
+      <div class="footer-links">
+        <a href="#shop">Shop</a>
+        <a href="orders.html">Your orders</a>
+        <a href="tracking.html">Track an order</a>
+        <a href="checkout.html">Your cart</a>
+      </div>
     </div>
-  </div>
-
-  <div class="main">
-    <div class="products-grid js-product-grid">
-
-
-
-    </div>
-  </div>
+    <div class="footer-bottom"><span>© 2026 Topazion</span><a href="#main-content">Back to top ↑</a></div>
+  </footer>
 
   <!-- Load data scripts first -->
-
   <script type="module" src="scripts/amazon.js"></script>
 </body>
 

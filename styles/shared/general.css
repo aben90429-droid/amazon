@@ -1,19 +1,36 @@
+:root {
+  color-scheme: light;
+  --color-brand-primary: #17302d;
+  --color-brand-secondary: #4c896e;
+  --color-brand-accent: #4d9074;
+  --color-brand-soft: #eaf2ed;
+  --color-ink: #1e2926;
+  --color-muted: #687570;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f5f8f6;
+  --color-border: #dce5df;
+  --color-focus: #4c896e;
+  --color-danger: #b13c2f;
+  --shadow-soft: 0 8px 28px rgba(23, 48, 45, 0.08);
+  --shadow-card: 0 14px 36px rgba(23, 48, 45, 0.09);
+  --font-body: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+  --font-heading: 'Manrope', 'DM Sans', 'Segoe UI', Arial, sans-serif;
+}
+
 body {
-  font-family: Roboto, Arial;
-  color: rgb(33, 33, 33);
-  /* The <body> element has a default margin of 8px
-     on all sides. This removes the default margins. */
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background-color: var(--color-surface-soft);
   margin: 0;
 }
 
-/* <p> elements have a default margin on the top
-   and bottom. This removes the default margins. */
 p {
   margin: 0;
 }
 
 button {
   cursor: pointer;
+  font: inherit;
 }
 
 select {
@@ -21,52 +38,63 @@ select {
 }
 
 input, select, button {
-  font-family: Roboto, Arial;
+  font-family: var(--font-body);
 }
 
 .button-primary {
-  color: rgb(33, 33, 33);
-  background-color: rgb(255, 216, 20);
-  border: 1px solid rgb(252, 210, 0);
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-surface);
+  background-color: var(--color-brand-primary);
+  border: 1px solid var(--color-brand-primary);
+  border-radius: 999px;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+  box-shadow: 0 4px 12px rgba(23, 48, 45, 0.15);
+  text-decoration: none;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .button-primary:hover {
-  background-color: rgb(247, 202, 0);
-  border: 1px solid rgb(242, 194, 0);
+  background-color: var(--color-brand-secondary);
+  border-color: var(--color-brand-secondary);
+  box-shadow: 0 7px 18px rgba(23, 48, 45, 0.2);
+  transform: translateY(-1px);
 }
 
 .button-primary:active {
-  background: rgb(255, 216, 20);
-  border-color: rgb(252, 210, 0);
+  background: var(--color-brand-primary);
+  border-color: var(--color-brand-primary);
   box-shadow: none;
+  transform: translateY(0);
 }
 
 .button-secondary {
-  color: rgb(33, 33, 33);
-  background: white;
-  border: 1px solid rgb(213, 217, 217);
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-brand-primary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+  box-shadow: 0 3px 10px rgba(23, 48, 45, 0.05);
+  text-decoration: none;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .button-secondary:hover {
-  background-color: rgb(247, 250, 250);
+  background-color: var(--color-brand-soft);
+  border-color: var(--color-brand-accent);
+  transform: translateY(-1px);
 }
 
 .button-secondary:active {
-  background-color: rgb(237, 253, 255);
+  background-color: var(--color-brand-soft);
   box-shadow: none;
+  transform: translateY(0);
 }
 
-/* These styles will limit text to 2 lines. Anything
-   beyond 2 lines will be replaced with "..."
-   You can find this code by using an A.I. tool or by
-   searching in Google.
-   https://css-tricks.com/almanac/properties/l/line-clamp/ */
 .limit-text-to-2-lines {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -75,27 +103,58 @@ input, select, button {
 }
 
 .link-primary {
-  color: rgb(1, 124, 182);
+  color: var(--color-brand-secondary);
   cursor: pointer;
 }
 
 .link-primary:hover {
-  color: rgb(196, 80, 0);
+  color: var(--color-brand-primary);
 }
 
-/* Styles for dropdown selectors. */
 select {
-  color: rgb(33, 33, 33);
-  background-color: rgb(240, 240, 240);
-  border: 1px solid rgb(213, 217, 217);
-  border-radius: 8px;
+  color: var(--color-ink);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
   padding: 3px 5px;
   font-size: 15px;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+  box-shadow: 0 2px 5px rgba(23, 48, 45, 0.05);
 }
 
 select:focus,
-input:focus {
-  outline: 2px solid rgb(255, 153, 0);
+input:focus-visible,
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2000;
+  padding: 10px 14px;
+  color: var(--color-surface);
+  background: var(--color-brand-primary);
+  border-radius: 8px;
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -44,8 +44,9 @@
 
 .cart-item-container,
 .payment-summary {
-  border: 1px solid rgb(222, 222, 222);
-  border-radius: 4px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
   padding: 18px;
 }
 
@@ -69,7 +70,7 @@
 }
 
 .delivery-date {
-  color: rgb(0, 118, 0);
+  color: var(--color-brand-secondary);
   font-weight: 700;
   font-size: 19px;
   margin-top: 5px;
@@ -110,7 +111,7 @@
 }
 
 .product-price {
-  color: rgb(177, 39, 4);
+  color: var(--color-brand-primary);
   font-weight: 700;
   margin-bottom: 5px;
 }
@@ -152,13 +153,13 @@
 }
 
 .delivery-option-date {
-  color: rgb(0, 118, 0);
+  color: var(--color-brand-secondary);
   font-weight: 500;
   margin-bottom: 3px;
 }
 
 .delivery-option-price {
-  color: rgb(120, 120, 120);
+  color: var(--color-muted);
   font-size: 15px;
 }
 
@@ -184,7 +185,7 @@
 }
 
 .subtotal-row .payment-summary-money {
-  border-top: 1px solid rgb(222, 222, 222);
+  border-top: 1px solid var(--color-border);
 }
 
 .subtotal-row div {
@@ -192,11 +193,11 @@
 }
 
 .total-row {
-  color: rgb(177, 39, 4);
+  color: var(--color-brand-primary);
   font-weight: 700;
   font-size: 18px;
 
-  border-top: 1px solid rgb(222, 222, 222);
+  border-top: 1px solid var(--color-border);
   padding-top: 18px;
 }
 

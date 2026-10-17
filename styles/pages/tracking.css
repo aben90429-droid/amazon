@@ -22,7 +22,7 @@
   font-size: 25px;
   font-weight: 700;
   margin-bottom: 10px;
-  color: rgb(0, 118, 0);
+  color: var(--color-brand-secondary);
   margin-top: 5px;
   margin-bottom: 22px;
 }
@@ -78,7 +78,7 @@
 }
 
 .current-status {
-  color: rgb(6, 125, 98);
+  color: var(--color-brand-secondary);
 }
 
 @media (max-width: 575px) {
@@ -102,14 +102,14 @@
   height: 25px;
   width: 100%;
 
-  border: 1px solid rgb(200, 200, 200);
+  border: 1px solid var(--color-border);
   border-radius: 50px;
   overflow: hidden;
 }
 
 .progress-bar {
   height: 100%;
-  background-color: green;
+  background-color: var(--color-brand-secondary);
   border-radius: 50px;
   width: 50%;
 }

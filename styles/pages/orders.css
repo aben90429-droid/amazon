@@ -26,8 +26,8 @@
 }
 
 .order-header {
-  background-color: rgb(240, 242, 242);
-  border: 1px solid rgb(213, 217, 217);
+  background-color: var(--color-brand-soft);
+  border: 1px solid var(--color-border);
 
   display: flex;
   align-items: center;
@@ -87,7 +87,7 @@
 
 .order-details-grid {
   padding: 40px 25px;
-  border: 1px solid rgb(213, 217, 217);
+  border: 1px solid var(--color-border);
   border-top: none;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
