@@ -48,9 +48,19 @@
       <div class="order-summary js-order-summary">
       </div>
 
-      <div class="payment-summary js-payment-summary">
+      <div>
+        <form class="checkout-information" id="checkout-information">
+          <h2>Customer information</h2>
+          <label>Full name <input name="customerName" autocomplete="name" maxlength="120" required></label>
+          <label>Email <input name="customerEmail" type="email" autocomplete="email" maxlength="200" required></label>
+          <label>Shipping address <textarea name="shippingAddress" autocomplete="street-address" maxlength="500" required></textarea></label>
+          <h2>Payment</h2>
+          <label class="payment-choice"><input type="radio" name="paymentMethod" value="demo" checked> Demo payment (no real charge)</label>
+          <p class="checkout-note">Real card payments will be connected later through a payment provider.</p>
+        </form>
+        <div class="payment-summary js-payment-summary">
 
-
+        </div>
       </div>
     </div>
   </div>

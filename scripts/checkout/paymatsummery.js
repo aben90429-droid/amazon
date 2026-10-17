@@ -38,7 +38,7 @@ export function renderPaymatsummery() {
         </div>
 
         <div class="payment-summary-row">
-          <div>item(3):</div>
+          <div>Items (${cart.reduce((total, cartItem) => total + cartItem.quantity, 0)}):</div>
           <div class="payment-summary-money">$${formatcurrency(productpriceCents)}
           </div>
         </div>
@@ -77,6 +77,12 @@ export function renderPaymatsummery() {
     placeOrderButton.textContent = 'Placing order...';
     try{
       const orderCart = cart.map((cartItem) => ({ ...cartItem }));
+      const information = new FormData(document.querySelector('#checkout-information'));
+      if (!document.querySelector('#checkout-information').reportValidity()) {
+        placeOrderButton.disabled = false;
+        placeOrderButton.textContent = 'Place your order';
+        return;
+      }
       const response = await fetch(`${backendUrl}/orders`, {
       method: 'POST',
       headers: {
@@ -84,7 +90,11 @@ export function renderPaymatsummery() {
         Authorization: `Bearer ${localStorage.getItem('topazionToken')}`
       },
   body: JSON.stringify({
-    cart: orderCart
+    cart: orderCart,
+    customerName: information.get('customerName'),
+    customerEmail: information.get('customerEmail'),
+    shippingAddress: information.get('shippingAddress'),
+    paymentMethod: information.get('paymentMethod')
   })
 });
 

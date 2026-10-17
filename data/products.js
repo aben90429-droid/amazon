@@ -32,6 +32,8 @@ class product {
     this.rating = producDetalis.rating;
     this.priceCents = producDetalis.priceCents;
     this.stock = producDetalis.stock;
+    this.keywords = producDetalis.keywords || [];
+    this.category = producDetalis.category || '';
 
   }
 

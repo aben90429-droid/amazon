@@ -2,6 +2,7 @@ import { products, loadProductsfetch, getproduct } from '../data/products.js';
 import { getdeliveryoption } from '../data/delivery.js';
 import { formatcurrency } from './uitils/money.js';
 import { backendUrl } from '../data/backend.js';
+import { escapeHTML, safeImagePath } from './uitils/sanitize.js';
 
 function getOrderTotal(order) {
   return order.cart.reduce((total, cartItem) => {
@@ -38,10 +39,10 @@ function renderOrders(orders) {
 
       return `
         <div class="product-image-container">
-          <img src="${product.image}" alt="${product.name}">
+          <img src="${safeImagePath(product.image)}" alt="${escapeHTML(product.name)}">
         </div>
         <div class="product-details">
-          <div class="product-name">${product.name}</div>
+          <div class="product-name">${escapeHTML(product.name)}</div>
           <div class="product-delivery-date">Arriving on: ${getDeliveryDate(cartItem)}</div>
           <div class="product-quantity">Quantity: ${cartItem.quantity}</div>
           <div class="product-price">${product.getprice()}</div>
@@ -66,14 +67,34 @@ function renderOrders(orders) {
               <div>$${formatcurrency(getOrderTotal(order))}</div>
             </div>
           </div>
-          <div class="order-header-right-section">
+            <div class="order-header-right-section">
             <div class="order-header-label">Order ID:</div>
-            <div>${order.orderId}</div>
+            <div>${escapeHTML(order.orderId)}</div>
+            <div class="order-status status-${escapeHTML(order.status)}">${escapeHTML(order.status)}</div>
+            ${order.refundStatus !== 'not_requested' ? `<div class="refund-status">Refund: ${escapeHTML(order.refundStatus)}</div>` : ''}
+            ${order.status === 'processing' ? `<button class="cancel-order-button button-secondary" data-order-id="${order.orderId}" type="button">Cancel order</button>` : ''}
           </div>
         </div>
         <div class="order-details-grid">${items}</div>
       </div>`;
   }).join('');
+
+  ordersGrid.querySelectorAll('.cancel-order-button').forEach((button) => {
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      try {
+        const response = await fetch(`${backendUrl}/me/orders/${button.dataset.orderId}/cancel`, {
+          method: 'POST', headers: { Authorization: `Bearer ${localStorage.getItem('topazionToken')}` }
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Could not cancel this order.');
+        await loadOrdersPage();
+      } catch (error) {
+        button.disabled = false;
+        button.textContent = error.message;
+      }
+    });
+  });
 }
 
 async function loadOrdersPage() {

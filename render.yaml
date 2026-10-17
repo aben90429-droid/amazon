@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: topazion
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app
+    envVars:
+      - key: CORS_ORIGIN
+        value: https://topazion.onrender.com

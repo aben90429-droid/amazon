@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import secrets
 import sqlite3
+import time
+from logging.handlers import RotatingFileHandler
 from functools import wraps
 from pathlib import Path
 from typing import Any
@@ -18,14 +21,26 @@ DATABASE_FILE = BASE_DIR / "topazion.sqlite3"
 PRODUCTS_FILE = BASE_DIR / "products.json"
 
 app = Flask(__name__)
+LOG_FILE = BASE_DIR / "topazion.log"
+handler = RotatingFileHandler(LOG_FILE, maxBytes=1_000_000, backupCount=5, encoding="utf-8")
+handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.INFO)
+LOGIN_WINDOW_SECONDS = 300
+MAX_LOGIN_ATTEMPTS = 10
+SESSION_MAX_AGE_SECONDS = 60 * 60 * 24
+login_attempts: dict[str, list[float]] = {}
 
 
 @app.after_request
 def add_cors_headers(response):
-    print(f"{request.method} {request.path} -> {response.status_code}", flush=True)
-    response.headers["Access-Control-Allow-Origin"] = "*"
+    app.logger.info("%s %s -> %s", request.method, request.path, response.status_code)
+    response.headers["Access-Control-Allow-Origin"] = os.environ.get("CORS_ORIGIN", "http://localhost:8000")
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     return response
 
 
@@ -96,11 +111,58 @@ def initialize_database() -> None:
                 id TEXT PRIMARY KEY,
                 user_id INTEGER NOT NULL,
                 items TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'processing',
+                refund_status TEXT NOT NULL DEFAULT 'not_requested',
+                customer_name TEXT,
+                customer_email TEXT,
+                shipping_address TEXT,
+                payment_method TEXT NOT NULL DEFAULT 'demo',
+                payment_status TEXT NOT NULL DEFAULT 'paid',
+                total_cents INTEGER NOT NULL DEFAULT 0,
                 created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
             """
         )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS wishlists (
+                user_id INTEGER NOT NULL,
+                product_id TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, product_id),
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (product_id) REFERENCES products(id)
+            )
+            """
+        )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS reviews (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                product_id TEXT NOT NULL,
+                rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+                review TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE (user_id, product_id),
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (product_id) REFERENCES products(id)
+            )
+            """
+        )
+        order_columns = {row[1] for row in connection.execute("PRAGMA table_info(orders)").fetchall()}
+        if "status" not in order_columns:
+            connection.execute("ALTER TABLE orders ADD COLUMN status TEXT NOT NULL DEFAULT 'processing'")
+        if "refund_status" not in order_columns:
+            connection.execute("ALTER TABLE orders ADD COLUMN refund_status TEXT NOT NULL DEFAULT 'not_requested'")
+        for column, definition in (
+            ("customer_name", "TEXT"), ("customer_email", "TEXT"),
+            ("shipping_address", "TEXT"), ("payment_method", "TEXT NOT NULL DEFAULT 'demo'"),
+            ("payment_status", "TEXT NOT NULL DEFAULT 'paid'"), ("total_cents", "INTEGER NOT NULL DEFAULT 0"),
+        ):
+            if column not in order_columns:
+                connection.execute(f"ALTER TABLE orders ADD COLUMN {column} {definition}")
         seed_users(connection)
         product_count = connection.execute("SELECT COUNT(*) FROM products").fetchone()[0]
         if product_count == 0:
@@ -168,7 +230,7 @@ def require_user(handler):
         with get_connection() as connection:
             user = connection.execute(
                 """
-                SELECT users.* FROM users
+                SELECT users.*, login_sessions.created_at AS session_created_at FROM users
                 JOIN login_sessions ON login_sessions.user_id = users.id
                 WHERE login_sessions.token = ?
                 """,
@@ -176,6 +238,10 @@ def require_user(handler):
             ).fetchone()
         if user is None:
             return error("Your sign-in session is not valid.", 401)
+        if time.time() - time.mktime(time.strptime(user["session_created_at"], "%Y-%m-%d %H:%M:%S")) > SESSION_MAX_AGE_SECONDS:
+            with get_connection() as cleanup_connection:
+                cleanup_connection.execute("DELETE FROM login_sessions WHERE token = ?", (token,))
+            return error("Your sign-in session has expired.", 401)
         g.current_user = user
         return handler(*args, **kwargs)
     return wrapped
@@ -207,10 +273,17 @@ def login():
     password = payload.get("password", "")
     if not username or not password:
         return error("Username and password are required.")
+    now = time.time()
+    attempts = [attempt for attempt in login_attempts.get(username, []) if now - attempt < LOGIN_WINDOW_SECONDS]
+    if len(attempts) >= MAX_LOGIN_ATTEMPTS:
+        return error("Too many sign-in attempts. Please try again later.", 429)
     with get_connection() as connection:
         user = connection.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
         if user is None or not check_password_hash(user["password_hash"], password):
+            attempts.append(now)
+            login_attempts[username] = attempts
             return error("The username or password is incorrect.", 401)
+        login_attempts.pop(username, None)
         token = secrets.token_urlsafe(32)
         connection.execute("INSERT INTO login_sessions (token, user_id) VALUES (?, ?)", (token, user["id"]))
     return jsonify({"token": token, "user": user_to_dict(user)})
@@ -275,8 +348,8 @@ def save_my_cart():
     items = payload.get("items")
     if not isinstance(items, list):
         return error("Cart items must be a list.")
+    validated_items: list[tuple[str, int]] = []
     with get_connection() as connection:
-        connection.execute("DELETE FROM user_cart WHERE user_id = ?", (g.current_user["id"],))
         for item in items:
             product_id = item.get("productId") if isinstance(item, dict) else None
             quantity = item.get("quantity") if isinstance(item, dict) else None
@@ -287,6 +360,9 @@ def save_my_cart():
                 return error(f"Product {product_id} does not exist.", 404)
             if quantity > product["stock"]:
                 return error(f"Only {product['stock']} unit(s) are available.", 409)
+            validated_items.append((product_id, quantity))
+        connection.execute("DELETE FROM user_cart WHERE user_id = ?", (g.current_user["id"],))
+        for product_id, quantity in validated_items:
             connection.execute(
                 "INSERT INTO user_cart (user_id, product_id, quantity) VALUES (?, ?, ?)",
                 (g.current_user["id"], product_id, quantity),
@@ -321,6 +397,11 @@ def validate_product(payload: Any) -> str | None:
         return "Product name must be a non-empty string."
     if not isinstance(payload["image"], str) or not payload["image"].strip():
         return "Product image must be a non-empty string."
+    image_path = payload["image"].strip()
+    if not image_path.startswith("images/") or ".." in Path(image_path).parts:
+        return "Product image must be a local path inside the images folder."
+    if len(payload["name"].strip()) > 200 or len(image_path) > 300:
+        return "Product name or image path is too long."
     if not isinstance(payload["priceCents"], int) or payload["priceCents"] < 0:
         return "priceCents must be a non-negative integer."
     if not isinstance(payload["stock"], int) or payload["stock"] < 0:
@@ -329,6 +410,10 @@ def validate_product(payload: Any) -> str | None:
         return "Keywords must be a list of strings."
     if not isinstance(payload["rating"], dict):
         return "Rating must be an object."
+    if not isinstance(payload["rating"].get("stars"), (int, float)) or not 0 <= payload["rating"]["stars"] <= 5:
+        return "Rating stars must be between 0 and 5."
+    if not isinstance(payload["rating"].get("count"), int) or payload["rating"]["count"] < 0:
+        return "Rating count must be a non-negative whole number."
     return None
 
 
@@ -337,6 +422,17 @@ def list_products():
     with get_connection() as connection:
         rows = connection.execute("SELECT * FROM products ORDER BY rowid").fetchall()
     return jsonify([product_to_dict(row) for row in rows])
+
+
+@app.get("/health")
+def health_check():
+    try:
+        with get_connection() as connection:
+            connection.execute("SELECT 1").fetchone()
+        return jsonify({"status": "ok"})
+    except sqlite3.Error:
+        app.logger.exception("Health check database failure")
+        return jsonify({"status": "error"}), 503
 
 
 @app.post("/products")
@@ -430,6 +526,18 @@ def create_order():
     items = payload.get("cart")
     if not isinstance(items, list) or not items:
         return error("An order must contain at least one product.")
+    customer_name = (payload.get("customerName") or "").strip()
+    customer_email = (payload.get("customerEmail") or "").strip().lower()
+    shipping_address = (payload.get("shippingAddress") or "").strip()
+    payment_method = payload.get("paymentMethod")
+    if not customer_name or len(customer_name) > 120:
+        return error("A valid customer name is required.")
+    if "@" not in customer_email or len(customer_email) > 200:
+        return error("A valid customer email is required.")
+    if not shipping_address or len(shipping_address) > 500:
+        return error("A valid shipping address is required.")
+    if payment_method != "demo":
+        return error("Only the demo payment method is available until a payment provider is connected.")
     quantities: dict[str, int] = {}
     normalized_items: list[dict[str, Any]] = []
     for item in items:
@@ -441,13 +549,14 @@ def create_order():
             return error("Every order quantity must be a positive whole number.")
         quantities[product_id] = quantities.get(product_id, 0) + quantity
         if not any(existing["productId"] == product_id for existing in normalized_items):
-            normalized_items.append({"productId": product_id, "quantity": quantity})
+            normalized_items.append({"productId": product_id, "quantity": quantity, "deliveryOptionId": item.get("deliveryOptionId", "1")})
         else:
             for normalized_item in normalized_items:
                 if normalized_item["productId"] == product_id:
                     normalized_item["quantity"] += quantity
                     break
     order_id = str(uuid4())
+    total_cents = 0
     try:
         with get_connection() as connection:
             connection.execute("BEGIN IMMEDIATE")
@@ -457,14 +566,18 @@ def create_order():
                     return error(f"Product {product_id} does not exist.", 404)
                 if quantity > row["stock"]:
                     return error(f"Only {row['stock']} unit(s) of {row['name']} are available.", 409)
+                product_row = connection.execute("SELECT price_cents FROM products WHERE id = ?", (product_id,)).fetchone()
+                delivery_prices = {"1": 0, "2": 499, "3": 999}
+                total_cents += (product_row["price_cents"] + delivery_prices.get(next((item.get("deliveryOptionId", "1") for item in items if item.get("productId") == product_id), "1"), 0)) * quantity
             for product_id, quantity in quantities.items():
                 connection.execute(
                     "UPDATE products SET stock = stock - ? WHERE id = ?",
                     (quantity, product_id),
                 )
+            total_cents = round(total_cents * 1.1)
             connection.execute(
-                "INSERT INTO orders (id, user_id, items) VALUES (?, ?, ?)",
-                (order_id, g.current_user["id"], json.dumps(normalized_items)),
+                "INSERT INTO orders (id, user_id, items, status, customer_name, customer_email, shipping_address, payment_method, payment_status, total_cents) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (order_id, g.current_user["id"], json.dumps(normalized_items), "processing", customer_name, customer_email, shipping_address, payment_method, "paid", total_cents),
             )
     except sqlite3.Error as database_error:
         return error(f"Could not place the order: {database_error}", 500)
@@ -476,13 +589,154 @@ def create_order():
 def get_my_orders():
     with get_connection() as connection:
         rows = connection.execute(
-            "SELECT id, items, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC",
+            "SELECT id, items, status, refund_status, payment_status, total_cents, created_at FROM orders WHERE user_id = ? ORDER BY created_at DESC",
             (g.current_user["id"],),
         ).fetchall()
     return jsonify([
-        {"orderId": row["id"], "cart": json.loads(row["items"]), "createdAt": row["created_at"]}
+        {"orderId": row["id"], "cart": json.loads(row["items"]), "status": row["status"], "refundStatus": row["refund_status"], "paymentStatus": row["payment_status"], "totalCents": row["total_cents"], "createdAt": row["created_at"]}
         for row in rows
     ])
+
+
+@app.get("/admin/orders")
+@require_owner
+def list_all_orders():
+    with get_connection() as connection:
+        rows = connection.execute(
+            """SELECT orders.id, orders.items, orders.status, orders.refund_status,
+                      orders.created_at, users.username, users.display_name
+               FROM orders JOIN users ON users.id = orders.user_id
+               ORDER BY orders.created_at DESC"""
+        ).fetchall()
+    return jsonify([{
+        "orderId": row["id"], "cart": json.loads(row["items"]), "status": row["status"],
+        "refundStatus": row["refund_status"], "createdAt": row["created_at"],
+        "paymentStatus": row["payment_status"], "totalCents": row["total_cents"],
+        "username": row["username"], "displayName": row["display_name"],
+    } for row in rows])
+
+
+ORDER_STATUSES = {"processing", "shipped", "delivered", "cancelled"}
+
+
+@app.post("/me/orders/<order_id>/cancel")
+@require_user
+def cancel_order(order_id: str):
+    try:
+        with get_connection() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            order = connection.execute(
+                "SELECT status, items FROM orders WHERE id = ? AND user_id = ?",
+                (order_id, g.current_user["id"]),
+            ).fetchone()
+            if order is None:
+                return error("Order was not found.", 404)
+            if order["status"] != "processing":
+                return error("Only processing orders can be cancelled.", 409)
+            for item in json.loads(order["items"]):
+                connection.execute(
+                    "UPDATE products SET stock = stock + ? WHERE id = ?",
+                    (item["quantity"], item["productId"]),
+                )
+            connection.execute(
+                "UPDATE orders SET status = 'cancelled', refund_status = 'requested' WHERE id = ?",
+                (order_id,),
+            )
+    except sqlite3.Error as database_error:
+        return error(f"Could not cancel the order: {database_error}", 500)
+    return jsonify({"orderId": order_id, "status": "cancelled", "refundStatus": "requested"})
+
+
+@app.patch("/admin/orders/<order_id>")
+@require_owner
+def update_order_status(order_id: str):
+    payload = request.get_json(silent=True) or {}
+    status = payload.get("status")
+    if status not in ORDER_STATUSES:
+        return error(f"Status must be one of: {', '.join(sorted(ORDER_STATUSES))}.")
+    with get_connection() as connection:
+        result = connection.execute("UPDATE orders SET status = ? WHERE id = ?", (status, order_id))
+    if result.rowcount == 0:
+        return error("Order was not found.", 404)
+    return jsonify({"orderId": order_id, "status": status})
+
+
+@app.patch("/admin/orders/<order_id>/refund")
+@require_owner
+def update_refund_status(order_id: str):
+    payload = request.get_json(silent=True) or {}
+    refund_status = payload.get("refundStatus")
+    if refund_status not in {"approved", "rejected"}:
+        return error("Refund status must be approved or rejected.")
+    with get_connection() as connection:
+        result = connection.execute(
+            "UPDATE orders SET refund_status = ? WHERE id = ? AND status = 'cancelled'",
+            (refund_status, order_id),
+        )
+    if result.rowcount == 0:
+        return error("Only cancelled orders can have their refund updated.", 409)
+    return jsonify({"orderId": order_id, "refundStatus": refund_status})
+
+
+@app.get("/products/<product_id>/reviews")
+def list_reviews(product_id: str):
+    with get_connection() as connection:
+        rows = connection.execute(
+            """SELECT reviews.rating, reviews.review, reviews.created_at, users.display_name
+               FROM reviews JOIN users ON users.id = reviews.user_id
+               WHERE reviews.product_id = ? ORDER BY reviews.created_at DESC""",
+            (product_id,),
+        ).fetchall()
+    return jsonify([{"rating": row["rating"], "review": row["review"], "displayName": row["display_name"], "createdAt": row["created_at"]} for row in rows])
+
+
+@app.post("/products/<product_id>/reviews")
+@require_user
+def create_review(product_id: str):
+    payload = request.get_json(silent=True) or {}
+    rating = payload.get("rating")
+    review = (payload.get("review") or "").strip()
+    if not isinstance(rating, int) or rating not in range(1, 6):
+        return error("Rating must be a whole number from 1 to 5.")
+    if not review or len(review) > 1000:
+        return error("Review must be between 1 and 1000 characters.")
+    with get_connection() as connection:
+        if connection.execute("SELECT id FROM products WHERE id = ?", (product_id,)).fetchone() is None:
+            return error("Product was not found.", 404)
+        try:
+            connection.execute(
+                "INSERT INTO reviews (user_id, product_id, rating, review) VALUES (?, ?, ?, ?)",
+                (g.current_user["id"], product_id, rating, review),
+            )
+        except sqlite3.IntegrityError:
+            return error("You already reviewed this product.", 409)
+    return jsonify({"rating": rating, "review": review}), 201
+
+
+@app.get("/me/wishlist")
+@require_user
+def get_wishlist():
+    with get_connection() as connection:
+        rows = connection.execute("SELECT product_id FROM wishlists WHERE user_id = ? ORDER BY created_at DESC", (g.current_user["id"],)).fetchall()
+    return jsonify([row["product_id"] for row in rows])
+
+
+@app.put("/me/wishlist/<product_id>")
+@require_user
+def add_wishlist(product_id: str):
+    with get_connection() as connection:
+        if connection.execute("SELECT id FROM products WHERE id = ?", (product_id,)).fetchone() is None:
+            return error("Product was not found.", 404)
+        connection.execute("INSERT OR IGNORE INTO wishlists (user_id, product_id) VALUES (?, ?)", (g.current_user["id"], product_id))
+    return jsonify({"productId": product_id, "saved": True})
+
+
+@app.delete("/me/wishlist/<product_id>")
+@require_user
+def remove_wishlist(product_id: str):
+    with get_connection() as connection:
+        connection.execute("DELETE FROM wishlists WHERE user_id = ? AND product_id = ?", (g.current_user["id"], product_id))
+    return jsonify({"productId": product_id, "saved": False})
 
 
 @app.get("/cart")
@@ -503,8 +757,9 @@ def frontend_file(file_path: str):
     return send_from_directory(PROJECT_DIR, file_path.as_posix())
 
 
+initialize_database()
+
 if __name__ == "__main__":
-    initialize_database()
     port = int(os.environ.get("PORT", "8000"))
     print(f"Topazion Flask backend running on port {port}")
     app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)

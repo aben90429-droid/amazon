@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+*.py[cod]
+backend/topazion.sqlite3
+backend/topazion.log
