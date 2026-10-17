@@ -17,8 +17,8 @@ function getSearchValue() {
 }
 
 function getCategory(product) {
-  const departments = ['apparel', 'kitchen', 'home', 'bathroom', 'appliances', 'footwear', 'accessories', 'jewelry', 'sports'];
-  return departments.find((department) => product.keywords?.includes(department)) || product.type || 'Other';
+  const departments = ['women', 'kemis', 'men', 'kids', 'weddings', 'accessories', 'netela', 'apparel', 'kitchen', 'home', 'bathroom', 'appliances', 'footwear', 'jewelry', 'sports'];
+  return departments.find((department) => product.keywords?.includes(department) || product.name.toLowerCase().includes(department)) || product.type || 'Other';
 }
 
 function updateURL() {
@@ -33,11 +33,27 @@ function updateURL() {
 }
 
 function populateCategories() {
-  const categories = [...new Set(products.map(getCategory))].sort();
-  categoryFilter.innerHTML = '<option value="all">All categories</option>';
-  categories.forEach((category) => {
-    categoryFilter.insertAdjacentHTML('beforeend', `<option value="${escapeHTML(category)}">${escapeHTML(category)}</option>`);
+  const culturalCategories = [
+    { value: 'all', label: 'All Collections' },
+    { value: 'women', label: "Women's Kemis" },
+    { value: 'men', label: "Men's Cultural" },
+    { value: 'kids', label: 'Kids & Family' },
+    { value: 'weddings', label: 'Weddings & Melse' },
+    { value: 'accessories', label: 'Netela & Gabi' }
+  ];
+
+  categoryFilter.innerHTML = '';
+  culturalCategories.forEach((cat) => {
+    categoryFilter.insertAdjacentHTML('beforeend', `<option value="${escapeHTML(cat.value)}">${escapeHTML(cat.label)}</option>`);
   });
+
+  const productCategories = [...new Set(products.map(getCategory))].sort();
+  productCategories.forEach((category) => {
+    if (!culturalCategories.some((cat) => cat.value === category)) {
+      categoryFilter.insertAdjacentHTML('beforeend', `<option value="${escapeHTML(category)}">${escapeHTML(category)}</option>`);
+    }
+  });
+
   const params = new URLSearchParams(window.location.search);
   categoryFilter.value = params.get('category') || 'all';
   sortSelect.value = params.get('sort') || 'featured';
@@ -51,7 +67,25 @@ function getVisibleProducts() {
   const filtered = products.filter((product) => {
     const haystack = [product.name, product.category, ...(product.keywords || []), product.type]
       .filter(Boolean).join(' ').toLowerCase();
-    return (!searchTerm || haystack.includes(searchTerm)) && (category === 'all' || getCategory(product) === category);
+
+    let matchesCategory = (category === 'all');
+    if (!matchesCategory) {
+      if (category === 'women' || category === 'kemis') {
+        matchesCategory = haystack.includes('women') || haystack.includes('kemis') || haystack.includes('dress') || getCategory(product) === 'women' || getCategory(product) === 'apparel';
+      } else if (category === 'men') {
+        matchesCategory = haystack.includes('men') || haystack.includes('kidan') || getCategory(product) === 'men';
+      } else if (category === 'kids') {
+        matchesCategory = haystack.includes('kid') || haystack.includes('child') || haystack.includes('family') || getCategory(product) === 'kids';
+      } else if (category === 'weddings') {
+        matchesCategory = haystack.includes('wedding') || haystack.includes('melse') || haystack.includes('kaba') || (product.rating && product.rating.stars >= 4.5);
+      } else if (category === 'accessories' || category === 'netela') {
+        matchesCategory = haystack.includes('accessories') || haystack.includes('netela') || haystack.includes('gabi') || haystack.includes('sunglasses') || getCategory(product) === 'accessories';
+      } else {
+        matchesCategory = getCategory(product) === category || haystack.includes(category);
+      }
+    }
+
+    return (!searchTerm || haystack.includes(searchTerm)) && matchesCategory;
   });
   return filtered.sort((first, second) => {
     if (sortSelect.value === 'price-low') return first.priceCents - second.priceCents;
@@ -200,7 +234,52 @@ if (searchButton) {
 categoryFilter.addEventListener('change', () => { currentPage = 1; renderProductsGrid(); });
 sortSelect.addEventListener('change', () => { currentPage = 1; renderProductsGrid(); });
 
-loadProducts(() => { populateCategories(); renderProductsGrid(); });
+function setupSubnavInteractions() {
+  document.querySelectorAll('.js-subnav-link').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (link.dataset.action === 'home') {
+        event.preventDefault();
+        if (categoryFilter) categoryFilter.value = 'all';
+        if (sortSelect) sortSelect.value = 'featured';
+        if (searchInput) searchInput.value = '';
+        currentPage = 1;
+        renderProductsGrid();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      const category = link.dataset.category;
+      const sort = link.dataset.sort;
+
+      if (category !== undefined && categoryFilter) {
+        event.preventDefault();
+        categoryFilter.value = category;
+        if (sortSelect) sortSelect.value = sort || 'featured';
+        currentPage = 1;
+        renderProductsGrid();
+        const shopSection = document.getElementById('shop');
+        if (shopSection) {
+          shopSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else if (sort !== undefined && sortSelect) {
+        event.preventDefault();
+        sortSelect.value = sort;
+        currentPage = 1;
+        renderProductsGrid();
+        const shopSection = document.getElementById('shop');
+        if (shopSection) {
+          shopSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+}
+
+loadProducts(() => {
+  populateCategories();
+  renderProductsGrid();
+  setupSubnavInteractions();
+});
 /*
 this is a start of a great legacy that i will build in my life time this will be a note tha i promise my self to be the gratest software engineer that has passed through this life 
 i have started a journey that will end in death */

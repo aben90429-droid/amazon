@@ -3,17 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="scripts/theme.js"></script>
   <title>Wishlist | Topazion</title>
   <link rel="stylesheet" href="styles/shared/general.css">
   <link rel="stylesheet" href="styles/shared/amazon-header.css">
   <link rel="stylesheet" href="styles/pages/amazon.css">
 </head>
 <body>
-  <div class="amazon-header">
-    <div class="amazon-header-left-section"><a href="amazon.html" class="header-link"><img class="amazon-logo" src="images/topazion-header-mark.png" alt="Topazion"><img class="amazon-mobile-logo" src="images/topazion-header-mark.png" alt="Topazion"></a></div>
-    <div class="amazon-header-middle-section"><input class="search-bar" type="search" placeholder="Search products" aria-label="Search products"><button class="search-button" type="button" aria-label="Search"><img class="search-icon" src="images/icons/search-icon.png" alt=""></button></div>
-    <div class="amazon-header-right-section"><a class="orders-link header-link" href="orders.html">Returns &amp; Orders</a><a class="cart-link header-link" href="checkout.html"><img class="cart-icon" src="images/icons/cart-icon.png" alt="Cart"><div class="cart-quantity js-cart-quantity">0</div><div class="cart-text">Cart</div></a></div>
-  </div>
+  <header class="site-header">
+    <div class="amazon-header">
+      <div class="amazon-header-left-section">
+        <a href="amazon.html" class="header-link">
+          <img class="amazon-logo" src="images/topazion-header-mark.png" alt="Topazion">
+          <img class="amazon-mobile-logo" src="images/topazion-header-mark.png" alt="Topazion">
+        </a>
+      </div>
+      <form action="amazon.html" method="GET" class="amazon-header-middle-section" role="search">
+        <input name="q" class="search-bar" type="search" placeholder="Search Habesha Kemis, Men's wear, Netela..." aria-label="Search products">
+        <button class="search-button" type="submit" aria-label="Search">
+          <img class="search-icon" src="images/icons/search-icon.png" alt="">
+        </button>
+      </form>
+      <nav class="amazon-header-right-section" aria-label="Account and shopping">
+        <a class="orders-link header-link" href="orders.html">
+          <span class="returns-text">Returns</span>
+          <span class="orders-text">& Orders</span>
+        </a>
+        <a class="orders-link header-link" href="wishlist.html">Wishlist</a>
+        <a class="cart-link header-link" href="checkout.html">
+          <img class="cart-icon" src="images/icons/cart-icon.png" alt="Cart">
+          <div class="cart-quantity js-cart-quantity">0</div>
+          <div class="cart-text">Cart</div>
+        </a>
+      </nav>
+    </div>
+    <nav class="sub-header" aria-label="Cultural departments and quick links">
+      <div class="sub-header-content">
+        <a href="amazon.html" class="sub-header-link">
+          <span class="sub-header-icon" aria-hidden="true">🏠</span> Home
+        </a>
+        <span class="sub-header-separator" aria-hidden="true"></span>
+        <a href="amazon.html#shop" class="sub-header-link">All Collections</a>
+        <a href="amazon.html?category=women#shop" class="sub-header-link">Women’s Kemis</a>
+        <a href="amazon.html?category=men#shop" class="sub-header-link">Men’s Cultural</a>
+        <a href="amazon.html?category=kids#shop" class="sub-header-link">Kids &amp; Family</a>
+        <a href="amazon.html?category=weddings#shop" class="sub-header-link">Weddings &amp; Melse</a>
+        <a href="amazon.html?category=accessories#shop" class="sub-header-link">Netela &amp; Gabi</a>
+        <a href="amazon.html?sort=rating#shop" class="sub-header-link highlight">★ Top Rated Designs</a>
+        <span class="sub-header-separator" aria-hidden="true"></span>
+        <a href="orders.html" class="sub-header-link">Orders</a>
+        <a href="admin.html" class="sub-header-link">Seller Hub</a>
+        <a href="tracking.html" class="sub-header-link">Track Package</a>
+      </div>
+    </nav>
+  </header>
   <main class="main wishlist-page"><h1 class="wishlist-title">Your wishlist</h1><section class="wishlist-grid" aria-live="polite"><p>Loading wishlist...</p></section></main>
   <script type="module" src="scripts/wishlist.js"></script>
 </body>

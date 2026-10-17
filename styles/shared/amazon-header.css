@@ -179,6 +179,10 @@
   filter: brightness(0) saturate(100%) invert(18%) sepia(18%) saturate(1050%) hue-rotate(119deg) brightness(91%) contrast(91%);
 }
 
+:root[data-theme="dark"] .cart-icon {
+  filter: brightness(0) invert(1);
+}
+
 .cart-text {
   margin-top: 8px;
   font-size: 14px;
@@ -250,5 +254,98 @@
 
   .cart-text {
     font-size: 13px;
+  }
+}
+
+/* ==========================================================================
+   Secondary Sub-Navigation Bar (Categories & Discovery)
+   ========================================================================== */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--color-surface);
+}
+
+.site-header .amazon-header {
+  position: static;
+  box-shadow: none;
+}
+
+.sub-header {
+  background-color: var(--color-brand-deep);
+  color: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 0 clamp(16px, 4vw, 56px);
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(23, 48, 45, 0.08);
+}
+
+.sub-header-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 4px 0;
+  width: 100%;
+}
+
+.sub-header-content::-webkit-scrollbar {
+  display: none;
+}
+
+.sub-header-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 160ms ease, color 160ms ease;
+  flex-shrink: 0;
+}
+
+.sub-header-link:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.sub-header-link.highlight {
+  color: #ffd166;
+  font-weight: 600;
+}
+
+.sub-header-link.highlight:hover {
+  background-color: rgba(255, 209, 102, 0.15);
+  color: #ffe082;
+}
+
+.sub-header-separator {
+  display: inline-block;
+  width: 1px;
+  height: 18px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 760px) {
+  .sub-header {
+    padding: 0 12px;
+    min-height: 38px;
+  }
+
+  .sub-header-link {
+    font-size: 12.5px;
+    padding: 5px 9px;
   }
 }

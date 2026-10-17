@@ -17,9 +17,9 @@ h2 { font-size: 25px; }
 label { color: var(--muted); display: grid; gap: 7px; font-size: 13px; font-weight: 700; }
 input { border: 1px solid var(--line); border-radius: 10px; color: var(--ink); font: inherit; padding: 11px 12px; width: 100%; }
 .wide { grid-column: 1 / -1; }
-button { background: var(--accent); border: 0; border-radius: 10px; color: var(--color-surface); cursor: pointer; font: inherit; font-weight: 700; padding: 11px 16px; }
+button { background: var(--accent); border: 0; border-radius: 10px; color: var(--color-on-brand-secondary); cursor: pointer; font: inherit; font-weight: 700; padding: 11px 16px; }
 button:hover { background: var(--accent-dark); }
-.secondary-button { background: var(--ink); }
+.secondary-button { background: var(--color-brand-action); }
 .table-wrap { overflow-x: auto; }
 table { border-collapse: collapse; min-width: 680px; width: 100%; }
 th, td { border-bottom: 1px solid var(--line); padding: 14px 10px; text-align: left; vertical-align: middle; }
