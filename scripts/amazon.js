@@ -4,8 +4,13 @@ import { products,loadProducts } from '../data/products.js';
 import { formatcurrency } from './uitils/money.js';
 import { setupAccountMenu } from './account.js';
 import { escapeHTML, safeImagePath } from './uitils/sanitize.js';
+import './header.js';
 
 setupAccountMenu();
+
+window.addEventListener('topazion:currency-change', () => {
+  renderProductsGrid();
+});
 const pageSize = 12;
 let currentPage = Number(new URLSearchParams(window.location.search).get('page')) || 1;
 const categoryFilter = document.querySelector('.category-filter');

@@ -190,6 +190,23 @@
   background: #e6f1ee;
 }
 
+:root[data-theme="dark"] .hero-product {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-theme="dark"] .hero-product-main {
+  background: #172c25;
+}
+
+:root[data-theme="dark"] .hero-product-side {
+  background: #152922;
+}
+
+:root[data-theme="dark"] .hero-product-small {
+  background: #13241e;
+}
+
 .hero-art-caption {
   position: absolute;
   top: 13%;
@@ -204,6 +221,7 @@
   box-shadow: var(--shadow-soft);
   font-size: 12px;
   transform: rotate(4deg);
+  border: 1px solid var(--color-border);
 }
 
 .hero-art-caption strong {
@@ -461,13 +479,25 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 18px;
-  box-shadow: 0 3px 12px rgba(23, 48, 45, 0.035);
-  transition: box-shadow 180ms ease, transform 180ms ease;
+  box-shadow: var(--shadow-subtle);
+  transition: box-shadow 180ms ease, transform 180ms ease, border-color 180ms ease;
 }
 
 .product-container:hover {
   box-shadow: var(--shadow-card);
+  border-color: var(--color-brand-secondary);
   transform: translateY(-3px);
+}
+
+:root[data-theme="dark"] .product-container {
+  background: var(--color-card-bg);
+  border-color: var(--color-border);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="dark"] .product-container:hover {
+  border-color: var(--color-brand-secondary);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
 }
 
 .product-image-container {
@@ -478,7 +508,14 @@
   margin-bottom: 18px;
   padding: 12px;
   background: var(--color-surface-soft);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 12px;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+:root[data-theme="dark"] .product-image-container {
+  background: var(--color-image-surface);
+  border-color: var(--color-border);
 }
 
 .product-image {
@@ -487,11 +524,18 @@
   object-fit: contain;
 }
 
+:root[data-theme="dark"] .product-image {
+  border-radius: 6px;
+  filter: brightness(0.96) contrast(1.02);
+}
+
 .product-name {
   min-height: 42px;
   margin-bottom: 7px;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--color-ink);
 }
 
 .product-rating-container {
@@ -506,15 +550,17 @@
 }
 
 .product-rating-count {
-  margin-top: 3px;
+  margin-top: 2px;
   font-size: 13px;
+  color: var(--color-muted);
 }
 
 .product-price {
   margin-bottom: 8px;
-  color: var(--color-brand-primary);
-  font-size: 17px;
-  font-weight: 700;
+  color: var(--color-price);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .product-stock {

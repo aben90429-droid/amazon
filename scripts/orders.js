@@ -1,8 +1,11 @@
 import { products, loadProductsfetch, getproduct } from '../data/products.js';
 import { getdeliveryoption } from '../data/delivery.js';
-import { formatcurrency } from './uitils/money.js';
+import { formatcurrency, formatPriceWithCurrency } from './uitils/money.js';
 import { backendUrl } from '../data/backend.js';
 import { escapeHTML, safeImagePath } from './uitils/sanitize.js';
+import './header.js';
+
+let latestOrders = [];
 
 function getOrderTotal(order) {
   return order.cart.reduce((total, cartItem) => {
@@ -21,6 +24,7 @@ function getDeliveryDate(cartItem) {
 }
 
 function renderOrders(orders) {
+  latestOrders = orders;
   const ordersGrid = document.querySelector('.js-orders-grid');
   if (!ordersGrid) return;
 
@@ -64,7 +68,7 @@ function renderOrders(orders) {
             </div>
             <div class="order-total">
               <div class="order-header-label">Total:</div>
-              <div>$${formatcurrency(getOrderTotal(order))}</div>
+              <div>${formatPriceWithCurrency(getOrderTotal(order))}</div>
             </div>
           </div>
             <div class="order-header-right-section">
@@ -116,5 +120,11 @@ async function loadOrdersPage() {
     document.querySelector('.js-orders-grid').innerHTML = `<p>${error.message}</p>`;
   }
 }
+
+window.addEventListener('topazion:currency-change', () => {
+  if (latestOrders && latestOrders.length) {
+    renderOrders(latestOrders);
+  }
+});
 
 loadOrdersPage();

@@ -3,7 +3,9 @@ import { getproduct, loadProductsfetch } from '../data/products.js';
 import { notifyError } from '../data/backend.js';
 import { escapeHTML, safeImagePath } from './uitils/sanitize.js';
 import { backendUrl } from '../data/backend.js';
+import './header.js';
 
+let currentProduct = null;
 const detail = document.querySelector('.product-detail');
 const productId = new URLSearchParams(window.location.search).get('id');
 
@@ -11,7 +13,14 @@ function updateCartQuantity() {
   document.querySelector('.js-cart-quantity').textContent = cart.reduce((total, item) => total + item.quantity, 0);
 }
 
+window.addEventListener('topazion:currency-change', () => {
+  if (currentProduct) {
+    renderProduct(currentProduct);
+  }
+});
+
 function renderProduct(product) {
+  currentProduct = product;
   if (!product) {
     detail.innerHTML = '<h1>Product not found</h1><p>This product is no longer available.</p>';
     return;
