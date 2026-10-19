@@ -3,6 +3,7 @@ import { loadProductsfetch, products } from '../data/products.js';
 import { addToCart, cart } from '../data/cart.js';
 import { escapeHTML, safeImagePath } from './uitils/sanitize.js';
 import { notifyError } from '../data/backend.js';
+import './header.js';
 
 const token = localStorage.getItem('topazionToken');
 const grid = document.querySelector('.wishlist-grid');

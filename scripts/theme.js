@@ -4,39 +4,67 @@
   const savedTheme = localStorage.getItem(storageKey);
   let theme = savedTheme === 'dark' || savedTheme === 'light'
     ? savedTheme
-    : colorScheme.matches ? 'dark' : 'light';
+    : (colorScheme.matches ? 'dark' : 'light');
 
   function applyTheme() {
     document.documentElement.dataset.theme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (themeColor) {
-      themeColor.content = theme === 'dark' ? '#101d1a' : '#17302d';
+      themeColor.content = theme === 'dark' ? '#0c1815' : '#142e2a';
     }
 
-    const toggle = document.querySelector('.theme-toggle');
-    if (toggle) {
+    const toggles = document.querySelectorAll('.theme-toggle, .js-theme-toggle');
+    toggles.forEach((toggle) => {
       const isDark = theme === 'dark';
       toggle.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} mode`);
       toggle.setAttribute('aria-pressed', String(isDark));
       toggle.title = `Switch to ${isDark ? 'light' : 'dark'} mode`;
-      toggle.querySelector('.theme-toggle-icon').textContent = isDark ? '☀' : '☾';
-      toggle.querySelector('.theme-toggle-label').textContent = isDark ? 'Light' : 'Dark';
-    }
+      const icon = toggle.querySelector('.theme-toggle-icon');
+      if (icon) {
+        icon.textContent = isDark ? '☀️' : '🌙';
+      }
+      const label = toggle.querySelector('.theme-toggle-label');
+      if (label) {
+        label.textContent = isDark ? 'Light' : 'Dark';
+      }
+    });
+
+    window.dispatchEvent(new CustomEvent('topazion:theme-change', { detail: { theme } }));
   }
 
+  // Immediately apply theme attribute to avoid flash of wrong theme
   document.documentElement.dataset.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+
+  function toggleTheme() {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    try {
+      localStorage.setItem(storageKey, theme);
+    } catch (e) {
+      console.warn('Unable to persist theme to localStorage', e);
+    }
+    applyTheme();
+  }
+
+  window.toggleTopazionTheme = toggleTheme;
+  window.getTopazionTheme = () => theme;
 
   document.addEventListener('DOMContentLoaded', () => {
-    const toggle = document.createElement('button');
-    toggle.className = 'theme-toggle';
-    toggle.type = 'button';
-    toggle.innerHTML = '<span class="theme-toggle-icon" aria-hidden="true"></span><span class="theme-toggle-label"></span>';
-    toggle.addEventListener('click', () => {
-      theme = theme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem(storageKey, theme);
-      applyTheme();
+    document.querySelectorAll('.theme-toggle, .js-theme-toggle').forEach((btn) => {
+      btn.removeEventListener('click', toggleTheme);
+      btn.addEventListener('click', toggleTheme);
     });
-    document.body.append(toggle);
+
+    if (!document.querySelector('.theme-toggle')) {
+      const toggle = document.createElement('button');
+      toggle.className = 'theme-toggle';
+      toggle.type = 'button';
+      toggle.innerHTML = '<span class="theme-toggle-icon" aria-hidden="true"></span><span class="theme-toggle-label"></span>';
+      toggle.addEventListener('click', toggleTheme);
+      document.body.append(toggle);
+    }
+
     applyTheme();
   });
 

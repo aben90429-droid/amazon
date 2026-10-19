@@ -1,60 +1,120 @@
 :root {
   color-scheme: light;
-  --color-brand-primary: #17302d;
-  --color-brand-deep: #17302d;
-  --color-brand-secondary: #4c896e;
-  --color-brand-accent: #4d9074;
-  --color-brand-soft: #eaf2ed;
-  --color-brand-action: #17302d;
+  
+  /* Primary Brand Palette (Cultural Emerald & Forest) */
+  --color-brand-primary: #122c26;
+  --color-brand-deep: #0e241f;
+  --color-brand-secondary: #23684e;
+  --color-brand-accent: #2e8364;
+  --color-brand-soft: #edf5f0;
+  --color-brand-subtle: #f5f9f6;
+  --color-gold: #c2882f;
+  --color-gold-soft: #fcf4e6;
+  
+  /* Interactive Buttons & Links */
+  --color-brand-action: #122c26;
   --color-on-brand-action: #ffffff;
+  --color-brand-action-hover: #23684e;
   --color-on-brand-deep: #ffffff;
-  --color-brand-action-hover: #4c896e;
   --color-on-brand-secondary: #ffffff;
-  --color-ink: #1e2926;
-  --color-muted: #687570;
+  
+  /* Typography & Surfaces */
+  --color-ink: #192723;
+  --color-ink-secondary: #3b4d47;
+  --color-muted: #5e726b;
   --color-surface: #ffffff;
-  --color-surface-soft: #f5f8f6;
-  --color-border: #dce5df;
-  --color-focus: #4c896e;
-  --color-danger: #b13c2f;
-  --color-success: #007600;
-  --color-info: #017cb6;
-  --color-category-home: linear-gradient(135deg, #f4f8f5, #e8f1eb);
-  --color-category-style: linear-gradient(135deg, #f4f6f4, #e8ece8);
-  --color-category-comfort: linear-gradient(135deg, #f8f6f1, #f1eee5);
-  --color-image-surface: transparent;
-  --shadow-soft: 0 8px 28px rgba(23, 48, 45, 0.08);
-  --shadow-card: 0 14px 36px rgba(23, 48, 45, 0.09);
-  --font-body: 'DM Sans', 'Segoe UI', Arial, sans-serif;
-  --font-heading: 'Manrope', 'DM Sans', 'Segoe UI', Arial, sans-serif;
+  --color-surface-soft: #f6f9f7;
+  --color-surface-muted: #eaf1ed;
+  --color-border: #d4e0d9;
+  --color-border-subtle: #e5ede8;
+  --color-focus: #23684e;
+  
+  /* Commerce Accents */
+  --color-price: #122c26;
+  --color-price-accent: #0f6143;
+  --color-card-bg: #ffffff;
+  --color-image-surface: #f3f7f4;
+  --color-image-backdrop: #f8faf8;
+  --color-danger: #b3392b;
+  --color-success: #1b7a43;
+  --color-info: #0284c7;
+  --color-warning: #d97706;
+  
+  /* Category Gradients */
+  --color-category-home: linear-gradient(135deg, #f3f8f5, #e4ede7);
+  --color-category-style: linear-gradient(135deg, #f5f7f5, #e5eae6);
+  --color-category-comfort: linear-gradient(135deg, #faf7f2, #f0ede3);
+  
+  /* Shadows */
+  --shadow-subtle: 0 2px 8px rgba(18, 44, 38, 0.04);
+  --shadow-soft: 0 8px 24px rgba(18, 44, 38, 0.07);
+  --shadow-card: 0 12px 32px rgba(18, 44, 38, 0.08);
+  --shadow-hover: 0 16px 40px rgba(18, 44, 38, 0.12);
+  
+  /* Typography Families */
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-heading: 'Manrope', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-brand-primary: #b4d4c3;
-  --color-brand-secondary: #8fbea4;
-  --color-brand-accent: #a1ceb3;
-  --color-brand-soft: #263b34;
-  --color-brand-action: #4c896e;
-  --color-on-brand-action: #ffffff;
+  
+  /* Dark Mode Palette - Refined contrast without harsh white glare */
+  --color-brand-primary: #edf8f3;
+  --color-brand-deep: #091310;
+  --color-brand-secondary: #5eead4;
+  --color-brand-accent: #6ee7b7;
+  --color-brand-soft: #172c25;
+  --color-brand-subtle: #12221d;
+  --color-gold: #f6c860;
+  --color-gold-soft: #2b2311;
+  
+  /* High contrast action buttons in dark mode:
+     A bright emerald button with crisp dark green text delivers WCAG AAA contrast */
+  --color-brand-action: #34d399;
+  --color-on-brand-action: #052017;
+  --color-brand-action-hover: #6ee7b7;
   --color-on-brand-deep: #ffffff;
-  --color-brand-action-hover: #8fbea4;
-  --color-on-brand-secondary: #10201d;
-  --color-ink: #edf4ef;
-  --color-muted: #b1c1b9;
-  --color-surface: #192824;
-  --color-surface-soft: #101d1a;
-  --color-border: #354a42;
-  --color-focus: #a1ceb3;
-  --color-danger: #ff9589;
-  --color-success: #8fcea2;
-  --color-info: #91c6ed;
-  --color-category-home: linear-gradient(135deg, #20352e, #293f36);
-  --color-category-style: linear-gradient(135deg, #24342f, #2c3d36);
-  --color-category-comfort: linear-gradient(135deg, #34352c, #3a3a30);
-  --color-image-surface: #e9f0ec;
-  --shadow-soft: 0 8px 28px rgba(0, 0, 0, 0.2);
-  --shadow-card: 0 14px 36px rgba(0, 0, 0, 0.3);
+  --color-on-brand-secondary: #052017;
+  
+  /* Typography & Surfaces in Dark Mode */
+  --color-ink: #f1f5f3;
+  --color-ink-secondary: #cbd5e1;
+  --color-muted: #94a89f;
+  --color-surface: #13241f;
+  --color-surface-soft: #0b1713;
+  --color-surface-muted: #182b24;
+  --color-border: #233e34;
+  --color-border-subtle: #192e27;
+  --color-focus: #5eead4;
+  
+  /* Commerce Accents in Dark Mode */
+  --color-price: #6ee7b7;
+  --color-price-accent: #a7f3d0;
+  --color-card-bg: #142520;
+  --color-image-surface: #182c25;
+  --color-image-backdrop: #152721;
+  --color-danger: #f87171;
+  --color-success: #4ade80;
+  --color-info: #38bdf8;
+  --color-warning: #fbbf24;
+  
+  /* Refined dark category gradients */
+  --color-category-home: linear-gradient(135deg, #182c25, #223c33);
+  --color-category-style: linear-gradient(135deg, #1b2e27, #243c34);
+  --color-category-comfort: linear-gradient(135deg, #2a2c20, #353629);
+  
+  /* Deep, ambient dark mode shadows */
+  --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 14px 36px rgba(0, 0, 0, 0.55);
+  --shadow-hover: 0 18px 44px rgba(0, 0, 0, 0.65);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
@@ -62,16 +122,121 @@ body {
   color: var(--color-ink);
   background-color: var(--color-surface-soft);
   margin: 0;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+body.drawer-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* ==========================================================================
+   Typography Hierarchy
+   ========================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-brand-primary);
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(32px, 4.5vw, 54px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+h2 {
+  font-size: clamp(24px, 3.2vw, 38px);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.025em;
+}
+
+h3 {
+  font-size: clamp(19px, 2.2vw, 24px);
+  font-weight: 700;
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.68;
+  color: var(--color-ink);
+}
+
+.lead-text {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.7;
+  color: var(--color-ink-secondary);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--color-brand-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Form Controls & Interactive Elements
+   ========================================================================== */
+
+input,
+textarea,
+select,
+button {
+  font-family: var(--font-body);
+  font-size: 15px;
 }
 
 input,
 textarea {
   color: var(--color-ink);
   background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
 }
 
-p {
-  margin: 0;
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-muted);
+  opacity: 0.85;
+}
+
+select {
+  color: var(--color-ink);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
 }
 
 button {
@@ -83,77 +248,126 @@ button:focus-visible,
 a:focus-visible,
 select:focus-visible,
 input:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid rgb(255, 153, 0);
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
-select {
-  cursor: pointer;
-}
-
-input, select, button {
-  font-family: var(--font-body);
-}
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
 
 .button-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 24px;
   color: var(--color-on-brand-action);
   background-color: var(--color-brand-action);
   border: 1px solid var(--color-brand-action);
   border-radius: 999px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(23, 48, 45, 0.15);
+  font-size: 14.5px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(18, 44, 38, 0.16);
   text-decoration: none;
-  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease, color 160ms ease;
 }
 
 .button-primary:hover {
-  color: var(--color-on-brand-secondary);
+  color: var(--color-on-brand-action);
   background-color: var(--color-brand-action-hover);
   border-color: var(--color-brand-action-hover);
-  box-shadow: 0 7px 18px rgba(23, 48, 45, 0.2);
+  box-shadow: 0 8px 20px rgba(18, 44, 38, 0.22);
   transform: translateY(-1px);
 }
 
 .button-primary:active {
-  background: var(--color-brand-action);
-  border-color: var(--color-brand-action);
-  box-shadow: none;
   transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(18, 44, 38, 0.12);
 }
 
 .button-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 24px;
   color: var(--color-brand-primary);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 999px;
   cursor: pointer;
-  box-shadow: 0 3px 10px rgba(23, 48, 45, 0.05);
+  font-size: 14.5px;
+  font-weight: 700;
+  box-shadow: var(--shadow-subtle);
   text-decoration: none;
-  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease, color 160ms ease;
 }
 
 .button-secondary:hover {
   background-color: var(--color-brand-soft);
-  border-color: var(--color-brand-accent);
+  border-color: var(--color-brand-secondary);
+  color: var(--color-brand-primary);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
 }
 
 .button-secondary:active {
-  background-color: var(--color-brand-soft);
-  box-shadow: none;
   transform: translateY(0);
+}
+
+.button-subtle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  color: var(--color-ink);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.button-subtle:hover {
+  background: var(--color-brand-soft);
+  color: var(--color-brand-primary);
+}
+
+.link-primary {
+  color: var(--color-brand-secondary);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 160ms ease;
+}
+
+.link-primary:hover {
+  color: var(--color-brand-primary);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 .limit-text-to-2-lines {
@@ -163,51 +377,28 @@ input, select, button {
   overflow: hidden;
 }
 
-.link-primary {
-  color: var(--color-brand-secondary);
-  cursor: pointer;
-}
-
-.link-primary:hover {
-  color: var(--color-brand-primary);
-}
-
-select {
-  color: var(--color-ink);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  padding: 3px 5px;
-  font-size: 15px;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(23, 48, 45, 0.05);
-}
-
-select:focus,
-input:focus-visible,
-button:focus-visible,
-a:focus-visible,
-select:focus-visible,
-summary:focus-visible {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 3px;
-}
-
 .skip-link {
   position: absolute;
   top: 8px;
   left: 8px;
-  z-index: 2000;
-  padding: 10px 14px;
+  z-index: 3000;
+  padding: 10px 18px;
   color: var(--color-on-brand-deep);
   background: var(--color-brand-deep);
+  border: 1px solid var(--color-brand-secondary);
   border-radius: 8px;
-  transform: translateY(-150%);
+  font-weight: 700;
+  transform: translateY(-180%);
+  transition: transform 160ms ease;
 }
 
 .skip-link:focus {
   transform: translateY(0);
 }
+
+/* ==========================================================================
+   Floating Theme Toggle
+   ========================================================================== */
 
 .theme-toggle {
   position: fixed;
@@ -215,31 +406,26 @@ summary:focus-visible {
   bottom: 22px;
   z-index: 1100;
   display: inline-flex;
-  min-height: 46px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 8px;
   padding: 0 16px;
   color: var(--color-ink);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 999px;
   box-shadow: var(--shadow-card);
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
-  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease, color 160ms ease;
 }
 
 .theme-toggle:hover {
   background: var(--color-brand-soft);
-  border-color: var(--color-brand-accent);
+  border-color: var(--color-brand-secondary);
   transform: translateY(-2px);
-}
-
-:root .theme-toggle:hover {
-  color: var(--color-ink);
-  background: var(--color-brand-soft);
-  border-color: var(--color-brand-accent);
+  box-shadow: var(--shadow-hover);
 }
 
 .theme-toggle:active {
@@ -247,10 +433,13 @@ summary:focus-visible {
 }
 
 .theme-toggle-icon {
-  color: var(--color-brand-secondary);
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1;
 }
+
+/* ==========================================================================
+   Reduced Motion
+   ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
   *,

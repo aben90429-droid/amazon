@@ -1,4 +1,4 @@
-import { formatcurrency } from '../scripts/uitils/money.js';
+import { formatcurrency, formatPriceWithCurrency } from '../scripts/uitils/money.js';
 import { setProductCatalog } from './cart.js';
 import { notifyError } from './backend.js';
 import { backendUrl } from './backend.js';
@@ -42,7 +42,7 @@ class product {
   }
 
   getprice() {
-    return `$${formatcurrency(this.priceCents)}`;
+    return formatPriceWithCurrency(this.priceCents);
   }
 
   extrainfoHtML() {
