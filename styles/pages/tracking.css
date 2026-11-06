@@ -64,9 +64,14 @@
 
 .product-image {
   max-width: 150px;
-  max-height: 150px;
+  max-height: 180px;
+  width: 130px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
   margin-top: 25px;
   margin-bottom: 50px;
+  display: block;
 }
 
 .progress-labels-container {

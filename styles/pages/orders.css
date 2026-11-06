@@ -121,11 +121,18 @@
 
 .product-image-container {
   text-align: center;
+  overflow: hidden;
 }
 
 .product-image-container img {
   max-width: 110px;
   max-height: 110px;
+  width: 90px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto;
 }
 
 .product-name {
