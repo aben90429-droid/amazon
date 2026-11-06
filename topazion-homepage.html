@@ -1,1161 +1,1244 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Topazion — Authentic Ethiopian & Eritrean Cultural Marketplace</title>
+  <meta name="description" content="Explore authentic Ethiopian and Eritrean cultural clothing, Habesha Kemis, handwoven Netela, and special-occasion styles at Topazion.">
+  <meta name="theme-color" content="#06100d">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Topazion | Ethiopian &amp; Eritrean Cultural Style</title>
   <link rel="icon" type="image/jpeg" href="images/topazion-favicon.jpg">
 
-  <!-- Google Fonts: Syne & Plus Jakarta Sans -->
+  <script src="scripts/theme.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            syne: ['Syne', 'sans-serif'],
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-          },
-          colors: {
-            emeraldForest: {
-              950: '#06100D',
-              900: '#0A1914',
-              850: '#0D201A',
-              800: '#0F231C',
-              750: '#142E25',
-              700: '#1A3B30',
-              600: '#234F41',
-            },
-            mint: {
-              50: '#F4FAF6',
-              100: '#E4F5EB',
-              200: '#D8EFDF',
-              300: '#C4EBC8',
-              400: '#A3D9B1',
-              500: '#75C48A',
-            },
-            cyan: {
-              neon: '#00F2FE',
-              glow: '#22D3EE',
-            },
-            amber: {
-              gold: '#FBBF24',
-              warm: '#F59E0B',
-            },
-            mutedForest: '#8FA89B',
-          },
-          boxShadow: {
-            'glow-mint': '0 0 25px -4px rgba(196, 235, 200, 0.35)',
-            'glow-cyan': '0 0 30px -4px rgba(0, 242, 254, 0.35)',
-            'gold-glow': '0 0 25px -4px rgba(245, 158, 11, 0.3)',
-          },
-          animation: {
-            'spin-slow': 'spin 30s linear infinite',
-            'float-slow': 'floatSubtle 6s ease-in-out infinite',
-            'pulse-subtle': 'pulse 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-          },
-          keyframes: {
-            floatSubtle: {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-8px)' },
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/shared/general.css">
+  <link rel="stylesheet" href="styles/shared/amazon-header.css">
+  <link rel="stylesheet" href="styles/pages/amazon.css">
 
   <style>
-    /* Lovely Logo Brand Styling */
-    .lovely-logo-badge {
-      display: inline-flex;
+    :root {
+      color-scheme: dark;
+      --color-brand-primary: #f0f7f2;
+      --color-brand-deep: #06100d;
+      --color-brand-secondary: #9bd6b1;
+      --color-brand-soft: #142e25;
+      --color-brand-subtle: #0d2019;
+      --color-ink: #f0f7f2;
+      --color-ink-secondary: #c4d2c9;
+      --color-muted: #9aada2;
+      --color-surface: #10221b;
+      --color-surface-soft: #08130f;
+      --color-surface-muted: #142e25;
+      --color-border: rgba(196, 235, 200, 0.17);
+      --color-border-subtle: rgba(196, 235, 200, 0.1);
+      --color-focus: #c4ebc8;
+      --color-card-bg: #10221b;
+      --color-image-surface: #0d1b15;
+      --shadow-subtle: 0 4px 16px rgba(0, 0, 0, 0.2);
+      --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.24);
+      --shadow-card: 0 16px 38px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 20px 46px rgba(0, 0, 0, 0.38);
+    }
+
+    body {
+      color-scheme: dark;
+      color: #f0f7f2;
+      background:
+        radial-gradient(ellipse at 50% 0, rgba(28, 79, 59, 0.17), transparent 38%),
+        #08130f;
+    }
+
+    .site-header {
+      background: #0a1914;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+    }
+
+    .utility-theme-btn.theme-toggle {
+      position: static;
+      right: auto;
+      bottom: auto;
+      z-index: auto;
+      min-height: 34px;
+      box-shadow: none;
+    }
+
+    .top-utility-bar,
+    .amazon-header,
+    .sub-header {
+      background-color: #0a1914;
+      color: #edf7f0;
+      border-color: rgba(196, 235, 200, 0.13);
+    }
+
+    .header-link,
+    .sub-header-link,
+    .utility-link {
+      color: #e7f2eb;
+    }
+
+    .amazon-header-middle-section {
+      background: #07120e;
+      border-color: rgba(196, 235, 200, 0.2);
+    }
+
+    .search-bar {
+      color: #f0f7f2;
+    }
+
+    .search-bar::placeholder {
+      color: #91a59a;
+    }
+
+    .amazon-header-middle-section:focus-within {
+      background: #0d2019;
+      border-color: #75c48a;
+    }
+
+    .utility-select,
+    .utility-select option {
+      color: #edf7f0;
+      background-color: #10221b;
+    }
+
+    .utility-right {
+      flex-wrap: wrap;
+    }
+
+    .header-tools {
+      display: flex;
       align-items: center;
       gap: 12px;
-      padding: 6px 14px 6px 10px;
+    }
+
+    .currency-control {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #c1d5c8;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .currency-note {
+      color: #91a59a;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .order-status-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      color: #d9f3df;
+      background: rgba(196, 235, 200, 0.07);
+      border: 1px solid rgba(196, 235, 200, 0.2);
       border-radius: 999px;
-      background: linear-gradient(135deg, rgba(20, 46, 37, 0.85), rgba(10, 25, 20, 0.95));
-      border: 1px solid rgba(196, 235, 200, 0.3);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      flex: 0 0 8px;
+      background: #75c48a;
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(117, 196, 138, 0.7);
+    }
+
+    .sub-header-content {
+      min-width: max-content;
+      gap: clamp(14px, 2.4vw, 30px);
+    }
+
+    .sub-header-link {
+      white-space: nowrap;
+    }
+
+    .homepage-main {
+      overflow: hidden;
+      background: #08130f;
+    }
+
+    .hero {
+      grid-template-columns: minmax(0, 1fr) minmax(310px, 0.9fr);
+      min-height: 560px;
+      background:
+        radial-gradient(ellipse at 83% 22%, rgba(87, 152, 113, 0.28), transparent 37%),
+        linear-gradient(118deg, #0b1b15 0%, #173a2d 62%, #214c39 100%);
+    }
+
+    .hero h1 {
+      max-width: 650px;
+      color: #fff;
+      font-size: clamp(43px, 5.1vw, 68px);
+    }
+
+    .hero h1 span {
+      color: #c4ebc8;
+    }
+
+    .hero-description {
+      max-width: 540px;
+      color: #b7c8bd;
+    }
+
+    .hero .eyebrow,
+    .section-heading .eyebrow,
+    .story-copy .eyebrow {
+      color: #a3d9b1;
+    }
+
+    .hero-actions a {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 1px solid;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    .hero-actions a:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero-primary-cta {
+      color: #07140e;
+      background: #c4ebc8;
+      border-color: #c4ebc8;
+    }
+
+    .hero-primary-cta:hover {
+      color: #07140e;
+      background: #e0f6e2;
+      border-color: #e0f6e2;
+    }
+
+    .hero-secondary-cta {
+      color: #e2f5e6;
+      background: rgba(7, 18, 14, 0.32);
+      border-color: rgba(196, 235, 200, 0.4);
+    }
+
+    .hero-secondary-cta:hover {
+      color: #fff;
+      background: rgba(196, 235, 200, 0.12);
+      border-color: #c4ebc8;
+    }
+
+    .hero-dual-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .hero-dual-links a {
+      padding: 8px 12px;
+      color: #e4f2e8;
+      background: rgba(6, 16, 13, 0.22);
+      border: 1px solid rgba(196, 235, 200, 0.2);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
       text-decoration: none;
     }
-    .lovely-logo-badge:hover {
-      border-color: #00F2FE;
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.35), 0 8px 24px rgba(0, 0, 0, 0.45);
-      transform: translateY(-2px) scale(1.02);
-    }
-    .lovely-logo-img {
-      height: 38px;
-      width: auto;
-      max-width: 120px;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
-      transition: transform 0.3s ease;
-    }
-    .lovely-logo-badge:hover .lovely-logo-img {
-      transform: scale(1.05);
+
+    .hero-dual-links a:hover {
+      border-color: #a3d9b1;
     }
 
-    /* Concentric Rings for Hero Artwork */
-    .concentric-ring-1 {
-      border: 1.5px dashed rgba(196, 235, 200, 0.3);
-    }
-    .concentric-ring-2 {
-      border: 1px solid rgba(216, 239, 223, 0.18);
-    }
-    .concentric-ring-3 {
-      border: 1.5px solid rgba(0, 242, 254, 0.35);
+    .hero-art {
+      width: min(100%, 430px);
     }
 
-    /* Glassmorphism Card Styles */
-    .glass-card {
-      background: rgba(15, 35, 28, 0.72);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(216, 239, 223, 0.12);
-    }
-    .glass-card-hover {
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .glass-card-hover:hover {
-      border-color: rgba(196, 235, 200, 0.45);
-      box-shadow: 0 16px 36px -10px rgba(10, 25, 20, 0.7), 0 0 25px rgba(0, 242, 254, 0.15);
-      transform: translateY(-5px);
+    .hero-product-main img,
+    .hero-product-side img,
+    .hero-product-small img {
+      object-fit: cover;
     }
 
-    /* Smooth Image Zoom on Card Hover */
-    .img-zoom-container img {
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .glass-card-hover:hover .img-zoom-container img {
-      transform: scale(1.09);
+    .hero-product-main img {
+      object-position: center 28%;
     }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
+    .hero-product {
+      background: #10221b;
+      border-color: rgba(229, 248, 233, 0.88);
     }
-    ::-webkit-scrollbar-track {
-      background: #06100D;
+
+    .hero-art-caption {
+      color: #e8f4ec;
+      background: #10221b;
+      border-color: rgba(196, 235, 200, 0.2);
     }
-    ::-webkit-scrollbar-thumb {
-      background: #1A3B30;
-      border-radius: 4px;
+
+    .hero-art-caption strong {
+      color: #c4ebc8;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #C4EBC8;
+
+    .promise-strip {
+      max-width: 1200px;
+      padding-right: 24px;
+      padding-left: 24px;
+      background: #0b1914;
+      border-color: rgba(196, 235, 200, 0.14);
+    }
+
+    .promise-item + .promise-item {
+      border-color: rgba(196, 235, 200, 0.14);
+    }
+
+    .promise-icon {
+      color: #c4ebc8;
+      background: #17352a;
+    }
+
+    .promise-item strong {
+      color: #eff8f1;
+    }
+
+    .promise-item div span {
+      color: #9aada2;
+    }
+
+    .discover-section,
+    .story-section,
+    .content-section {
+      color: #edf6ef;
+    }
+
+    .section-heading h2,
+    .story-copy h2,
+    .content-heading h2 {
+      color: #f1f8f3;
+    }
+
+    .collection-intro {
+      max-width: 590px;
+      margin-top: 12px;
+      color: #a6b8ad;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .section-link {
+      color: #a3d9b1;
+    }
+
+    .category-card {
+      color: #edf6ef;
+      background: linear-gradient(140deg, #12271e, #0c1a14);
+      border-color: rgba(196, 235, 200, 0.15);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    }
+
+    .category-card:hover {
+      border-color: rgba(196, 235, 200, 0.42);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34);
+    }
+
+    .category-card-copy h3,
+    .category-arrow {
+      color: #eaf5ed;
+    }
+
+    .category-card-copy > span:first-child {
+      color: #9aada2;
+    }
+
+    .category-image {
+      background: #0b1914;
+    }
+
+    .content-section {
+      padding: 72px max(24px, calc((100vw - 1200px) / 2));
+      scroll-margin-top: 110px;
+      border-top: 1px solid rgba(196, 235, 200, 0.12);
+    }
+
+    .section-deep {
+      background: linear-gradient(160deg, #0c1b15, #09130f);
+    }
+
+    .section-panel {
+      padding: 25px;
+      background: rgba(16, 34, 27, 0.86);
+      border: 1px solid rgba(196, 235, 200, 0.15);
+      border-radius: 22px;
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
+    }
+
+    .content-heading {
+      max-width: 720px;
+      margin: 0 auto 30px;
+      text-align: center;
+    }
+
+    .content-heading .eyebrow {
+      margin-bottom: 8px;
+      color: #a3d9b1;
+    }
+
+    .content-heading h2 {
+      font-size: clamp(27px, 3.5vw, 40px);
+    }
+
+    .content-heading p:last-child {
+      margin-top: 9px;
+      color: #9aada2;
+    }
+
+    .order-tracker {
+      max-width: 1080px;
+      margin: 0 auto;
+      scroll-margin-top: 120px;
+    }
+
+    .tracker-topline,
+    .tracker-controls,
+    .tracker-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .demo-badge,
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      color: #d7f0dd;
+      background: rgba(117, 196, 138, 0.12);
+      border: 1px solid rgba(117, 196, 138, 0.28);
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .tracker-controls {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      margin: 18px 0 22px;
+    }
+
+    .tracker-controls label,
+    .currency-control label {
+      color: #bbccc1;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tracker-select {
+      min-height: 40px;
+      padding: 0 34px 0 12px;
+      color: #f0f7f2;
+      background: #0a1914;
+      border: 1px solid rgba(196, 235, 200, 0.22);
+      border-radius: 10px;
+      font: inherit;
+    }
+
+    .tracker-select:focus-visible,
+    .currency-select:focus-visible {
+      outline: 2px solid #a3d9b1;
+      outline-offset: 3px;
+    }
+
+    .tracker-status {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      padding: 14px 0;
+      color: #c0d0c6;
+      border-top: 1px solid rgba(196, 235, 200, 0.13);
+    }
+
+    .tracker-status strong {
+      color: #f1f8f3;
+    }
+
+    .tracker-status .status-dot {
+      margin-left: auto;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pipeline-step {
+      position: relative;
+      min-height: 142px;
+      padding: 16px 12px;
+      color: #a8b9af;
+      text-align: left;
+      background: #0a1914;
+      border: 1px solid rgba(196, 235, 200, 0.14);
+      border-radius: 15px;
+      cursor: pointer;
+      transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+    }
+
+    .pipeline-step:hover {
+      border-color: rgba(196, 235, 200, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .pipeline-step[aria-current="step"] {
+      color: #eef8f0;
+      background: linear-gradient(145deg, rgba(32, 75, 55, 0.84), rgba(15, 36, 27, 0.98));
+      border-color: #83c895;
+      box-shadow: 0 0 22px rgba(117, 196, 138, 0.12);
+    }
+
+    .pipeline-number {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      margin-bottom: 12px;
+      place-items: center;
+      color: #0a1914;
+      background: #a3d9b1;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .pipeline-step strong,
+    .pipeline-step small {
+      display: block;
+    }
+
+    .pipeline-step strong {
+      margin-bottom: 5px;
+      color: #edf7f0;
+      font-size: 13px;
+    }
+
+    .pipeline-step small {
+      color: #9aada2;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .pipeline-progress {
+      height: 7px;
+      margin-top: 20px;
+      overflow: hidden;
+      background: #07120e;
+      border: 1px solid rgba(196, 235, 200, 0.12);
+      border-radius: 999px;
+    }
+
+    .pipeline-progress span {
+      display: block;
+      width: 20%;
+      height: 100%;
+      background: linear-gradient(90deg, #75c48a, #c4ebc8);
+      border-radius: inherit;
+      box-shadow: 0 0 15px rgba(163, 217, 177, 0.34);
+      transition: width 220ms ease;
+    }
+
+    .pipeline-explanation {
+      margin-top: 14px;
+      color: #aec0b5;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .trust-grid,
+    .spotlight-grid,
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 17px;
+    }
+
+    .trust-card,
+    .spotlight-card,
+    .gallery-card,
+    .featured-card,
+    .faq-item {
+      overflow: hidden;
+      background: linear-gradient(150deg, #12271e, #0d1a14);
+      border: 1px solid rgba(196, 235, 200, 0.14);
+      border-radius: 17px;
+    }
+
+    .trust-card {
+      padding: 22px;
+    }
+
+    .trust-card .trust-icon {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 15px;
+      place-items: center;
+      color: #c4ebc8;
+      background: rgba(117, 196, 138, 0.13);
+      border: 1px solid rgba(163, 217, 177, 0.2);
+      border-radius: 13px;
+      font-size: 20px;
+    }
+
+    .trust-card h3,
+    .spotlight-card h3,
+    .featured-card h3 {
+      margin-bottom: 7px;
+      color: #edf7f0;
+      font-size: 16px;
+    }
+
+    .trust-card p,
+    .spotlight-card p,
+    .featured-card p {
+      color: #9aada2;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .featured-card {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      text-decoration: none;
+      transition: border-color 160ms ease, transform 160ms ease;
+    }
+
+    .featured-card:hover {
+      border-color: rgba(163, 217, 177, 0.48);
+      transform: translateY(-3px);
+    }
+
+    .featured-card img,
+    .spotlight-card img,
+    .gallery-card img {
+      display: block;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .featured-card img {
+      height: 190px;
+      background: #0a1914;
+    }
+
+    .featured-card-copy {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 15px;
+    }
+
+    .featured-tag {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 4px 8px;
+      color: #d5f0dc;
+      background: rgba(117, 196, 138, 0.12);
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .featured-card-copy span:last-child {
+      margin-top: auto;
+      padding-top: 15px;
+      color: #a3d9b1;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .spotlight-grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      align-items: stretch;
+    }
+
+    .spotlight-card img {
+      height: 310px;
+      object-position: center 25%;
+    }
+
+    .spotlight-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 27px;
+    }
+
+    .spotlight-copy .eyebrow {
+      margin-bottom: 9px;
+      color: #a3d9b1;
+    }
+
+    .spotlight-copy h3 {
+      margin-bottom: 12px;
+      font-size: clamp(22px, 2.5vw, 30px);
+    }
+
+    .craft-list {
+      display: grid;
+      gap: 11px;
+      margin: 20px 0 0;
+      padding: 0;
+      color: #bdcec3;
+      font-size: 13px;
+      list-style: none;
+    }
+
+    .craft-list li::before {
+      margin-right: 9px;
+      color: #a3d9b1;
+      content: "✦";
+    }
+
+    .gallery-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .gallery-card {
+      position: relative;
+      min-height: 250px;
+    }
+
+    .gallery-card img {
+      height: 290px;
+      transition: transform 280ms ease;
+    }
+
+    .gallery-card:hover img {
+      transform: scale(1.04);
+    }
+
+    .gallery-caption {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      padding: 30px 13px 13px;
+      color: #f2f8f3;
+      background: linear-gradient(transparent, rgba(4, 12, 8, 0.9));
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .gallery-disclaimer {
+      margin-top: 14px;
+      color: #91a59a;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .faq-list {
+      display: grid;
+      max-width: 850px;
+      gap: 10px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      padding: 0 18px;
+    }
+
+    .faq-item summary {
+      position: relative;
+      padding: 17px 30px 17px 0;
+      color: #edf7f0;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item summary::after {
+      position: absolute;
+      top: 50%;
+      right: 2px;
+      color: #a3d9b1;
+      content: "+";
+      font-size: 20px;
+      transform: translateY(-50%);
+    }
+
+    .faq-item[open] summary::after {
+      content: "−";
+    }
+
+    .faq-answer {
+      padding: 0 0 17px;
+      color: #a8b9af;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .story-section {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.85fr);
+      align-items: center;
+      gap: clamp(28px, 6vw, 76px);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 72px 40px 86px;
+    }
+
+    .story-copy {
+      max-width: 560px;
+    }
+
+    .story-copy .eyebrow {
+      margin-bottom: 8px;
+    }
+
+    .story-copy h2 {
+      margin-bottom: 14px;
+      font-size: clamp(28px, 3.4vw, 40px);
+    }
+
+    .story-copy p:not(.eyebrow) {
+      margin: 0 0 22px;
+      color: #a6b8ad;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .story-image {
+      min-height: 300px;
+      overflow: hidden;
+      background: #10221b;
+      border: 1px solid rgba(196, 235, 200, 0.16);
+      border-radius: 24px;
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.3);
+    }
+
+    .story-image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+      object-fit: cover;
+      object-position: center 35%;
+    }
+
+    .story-cta {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      color: #07140e;
+      background: #c4ebc8;
+      border: 1px solid #c4ebc8;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background-color 160ms ease, transform 160ms ease;
+    }
+
+    .story-cta:hover {
+      color: #07140e;
+      background: #e0f6e2;
+      transform: translateY(-2px);
+    }
+
+    .site-footer {
+      color: #a6b8ad;
+      background: #06100d;
+      border-top: 1px solid rgba(196, 235, 200, 0.16);
+    }
+
+    .footer-brand,
+    .footer-links a,
+    .footer-bottom a {
+      color: #b7c8bd;
+    }
+
+    .footer-links a:hover,
+    .footer-bottom a:hover {
+      color: #d4f0db;
+    }
+
+    .footer-bottom {
+      border-color: rgba(196, 235, 200, 0.14);
+    }
+
+    @media (max-width: 1050px) {
+      .header-tools {
+        gap: 7px;
+      }
+
+      .currency-note {
+        display: none;
+      }
+
+      .amazon-header {
+        flex-wrap: wrap;
+      }
+
+      .amazon-header-middle-section {
+        order: 3;
+        flex: 1 0 100%;
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+      }
+
+      .pipeline {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .featured-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .story-section {
+        padding-right: 28px;
+        padding-left: 28px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .utility-container {
+        align-items: flex-start;
+      }
+
+      .utility-right {
+        justify-content: flex-start;
+        margin-left: 0;
+      }
+
+      .header-tools {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .order-status-link {
+        padding: 6px 8px;
+        font-size: 10px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero h1 {
+        font-size: clamp(42px, 11vw, 58px);
+      }
+
+      .hero-art {
+        width: min(82%, 310px);
+      }
+
+      .hero-dual-links {
+        justify-content: center;
+      }
+
+      .content-section {
+        padding: 55px 20px;
+      }
+
+      .section-panel {
+        padding: 18px;
+      }
+
+      .tracker-topline,
+      .tracker-status {
+        align-items: flex-start;
+      }
+
+      .tracker-topline {
+        flex-direction: column;
+      }
+
+      .tracker-status {
+        flex-wrap: wrap;
+      }
+
+      .tracker-status .status-dot {
+        margin-left: 0;
+      }
+
+      .pipeline {
+        grid-template-columns: 1fr;
+      }
+
+      .pipeline-step {
+        display: grid;
+        min-height: 0;
+        grid-template-columns: 36px 1fr;
+        align-items: center;
+        column-gap: 9px;
+        padding: 12px;
+      }
+
+      .pipeline-number {
+        grid-row: span 2;
+        margin: 0;
+      }
+
+      .pipeline-step strong {
+        margin: 0;
+      }
+
+      .trust-grid,
+      .spotlight-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-card,
+      .gallery-card img {
+        min-height: 220px;
+        height: 220px;
+      }
+
+      .story-section {
+        grid-template-columns: 1fr;
+        padding: 54px 20px 58px;
+      }
+
+      .story-image,
+      .story-image img {
+        min-height: 250px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
 
-<body class="bg-gradient-to-b from-emeraldForest-950 via-emeraldForest-900 to-emeraldForest-950 text-white font-sans antialiased selection:bg-mint-300 selection:text-emeraldForest-950 min-h-screen relative overflow-x-hidden">
-
-  <!-- TOP DECORATIVE TIBEB ACCENT BORDER -->
-  <div class="w-full h-1 bg-gradient-to-r from-amber-warm via-mint-300 via-cyan-neon to-amber-gold relative z-50"></div>
-
-  <!-- ==================== 1. TOP ANNOUNCEMENT BAR ==================== -->
-  <aside aria-label="Announcement Bar" class="bg-emeraldForest-950/95 border-b border-emeraldForest-750/70 text-xs py-2 px-4 sm:px-6 lg:px-8 relative z-40">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-      
-      <!-- Left: Orange AUTHENTIC Badge & Guild Statement -->
-      <div class="flex items-center gap-2.5">
-        <span class="bg-[#EA580C] text-white font-extrabold text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-sm">
-          AUTHENTIC
-        </span>
-        <span class="text-mint-200 font-medium text-[11px] sm:text-xs">
-          Direct from certified Ethiopian &amp; Eritrean Shemane guilds • 100% Escrow Protected
-        </span>
-      </div>
-
-      <!-- Right: Utility Controls (Currency, Language, Help) -->
-      <div class="flex items-center gap-4 text-mutedForest text-[11px] ml-auto">
-        <!-- Live Currency Switcher -->
-        <div class="flex items-center gap-1.5 hover:text-white transition-colors">
-          <i data-lucide="coins" class="w-3.5 h-3.5 text-mint-300"></i>
-          <select id="header-currency" onchange="switchCurrency(this.value)" class="bg-emeraldForest-900 text-white border border-emeraldForest-700 rounded-md px-1.5 py-0.5 text-[11px] focus:outline-none focus:border-mint-300">
-            <option value="USD">USD ($)</option>
-            <option value="ETB">ETB (Br)</option>
-            <option value="EUR">EUR (€)</option>
-            <option value="GBP">GBP (£)</option>
-            <option value="CAD">CAD (C$)</option>
-          </select>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="top-utility-bar">
+      <div class="utility-container">
+        <div class="utility-left">
+          <span class="utility-badge">Topazion</span>
+          <span class="utility-announcement">Cultural craft, considered style, and meaningful finds</span>
         </div>
-
-        <span class="text-emeraldForest-700">|</span>
-
-        <!-- Language Switcher -->
-        <div class="flex items-center gap-1 text-slate-300 hover:text-white">
-          <i data-lucide="globe" class="w-3.5 h-3.5 text-mint-300"></i>
-          <select class="bg-emeraldForest-900 text-white border border-emeraldForest-700 rounded-md px-1.5 py-0.5 text-[11px] focus:outline-none focus:border-mint-300">
-            <option value="en">English (Diaspora)</option>
-            <option value="am">አማርኛ (Amharic)</option>
-            <option value="ti">ትግርኛ (Tigrinya)</option>
-          </select>
-        </div>
-
-        <span class="text-emeraldForest-700">|</span>
-        <a href="#artisan-model" class="hover:text-mint-200 transition-colors">Escrow Guarantee</a>
-      </div>
-
-    </div>
-  </aside>
-
-  <!-- ==================== 2. MAIN HEADER WITH LOVELY LOGO ==================== -->
-  <header class="bg-emeraldForest-900/90 backdrop-blur-md sticky top-0 z-40 border-b border-emeraldForest-750/70">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4 lg:gap-8">
-      
-      <!-- Brand Logo: Lovely Presentation with Existing Header Mark & Glowing Badge -->
-      <a href="#" class="lovely-logo-badge group shrink-0">
-        <img class="lovely-logo-img" src="images/topazion-header-mark.png" alt="Topazion Cultural Marketplace" onerror="this.src='images/topazion-favicon.jpg'">
-        <div class="hidden sm:flex flex-col text-left pl-1 border-l border-white/15">
-          <span class="font-syne text-xs font-extrabold tracking-wider text-white group-hover:text-cyan-neon transition-colors">TOPAZION</span>
-          <span class="text-[9px] font-semibold text-mint-300 tracking-tight">HERITAGE GUILD</span>
-        </div>
-      </a>
-
-      <!-- Central Search Bar with Cultural Keywords -->
-      <div class="flex-1 max-w-2xl hidden md:block">
-        <div class="relative">
-          <input 
-            type="text" 
-            id="live-search" 
-            oninput="handleSearch(this.value)"
-            placeholder="Search Habesha Kemis, Men's wear, Netela, Jebena, Bridal..." 
-            class="w-full bg-emeraldForest-950/85 border border-emeraldForest-700 rounded-full py-2.5 pl-11 pr-4 text-xs text-white placeholder-mutedForest focus:outline-none focus:border-mint-300 focus:ring-1 focus:ring-mint-300/30 transition-all shadow-inner"
-          >
-          <i data-lucide="search" class="w-4 h-4 text-mint-300 absolute left-4 top-3 pointer-events-none"></i>
+        <div class="utility-right">
+          <div class="header-tools">
+            <label class="currency-control" for="homepage-currency">
+              Currency
+              <select id="homepage-currency" class="utility-select currency-select" aria-label="Choose currency for sample display">
+                <option value="USD">USD ($)</option>
+                <option value="ETB">ETB (Br)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+              </select>
+            </label>
+            <span class="currency-note" id="currency-note" aria-live="polite">Sample rate · not live FX</span>
+            <a class="order-status-link" href="#order-tracker"><span class="status-dot" aria-hidden="true"></span>Sample order · escrow held</a>
+            <button class="utility-theme-btn theme-toggle js-theme-toggle" type="button" aria-label="Toggle theme">
+              <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
+              <span class="theme-toggle-label">Dark</span>
+            </button>
+          </div>
         </div>
       </div>
-
-      <!-- Right Utility Actions -->
-      <div class="flex items-center gap-4 sm:gap-6 text-xs font-medium shrink-0">
-        <!-- Escrow Vault Status Pill -->
-        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emeraldForest-950/80 border border-mint-300/25">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          <span class="text-[10px] text-mutedForest">Escrow Vault:</span>
-          <span class="text-[10px] font-bold text-mint-200">100% Protected</span>
-        </div>
-
-        <!-- Custom Order Quick Button -->
-        <a href="#custom-order" class="px-4 py-2 rounded-full bg-mint-200 text-emeraldForest-950 font-bold text-xs hover:bg-mint-300 transition-all shadow-glow-mint hover:scale-[1.02] flex items-center gap-1.5">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emeraldForest-950"></i>
-          <span>Bespoke Order</span>
-        </a>
-      </div>
-
     </div>
 
-    <!-- Secondary Navigation Bar -->
-    <nav class="bg-emeraldForest-950/95 border-t border-emeraldForest-750/70 px-4 sm:px-6 lg:px-8 py-2 overflow-x-auto scrollbar-none">
-      <div class="max-w-7xl mx-auto flex items-center gap-6 text-xs font-medium whitespace-nowrap text-mutedForest">
-        <a href="#cultural-categories" class="text-mint-200 font-bold hover:text-white transition-colors flex items-center gap-1.5">
-          <i data-lucide="gem" class="w-3.5 h-3.5 text-mint-300"></i>
-          <span>★ Top Rated Designs</span>
+    <div class="amazon-header">
+      <div class="amazon-header-left-section">
+        <a href="topazion-homepage.html" class="header-link" aria-label="Topazion home">
+          <img class="amazon-logo" src="images/topazion-header-mark.png" alt="Topazion">
+          <img class="amazon-mobile-logo" src="images/topazion-header-mark.png" alt="Topazion">
         </a>
-        <a href="#cultural-categories" onclick="filterCategory('kemis')" class="hover:text-white transition-colors">Women's Kemis</a>
-        <a href="#cultural-categories" onclick="filterCategory('suits')" class="hover:text-white transition-colors">Men's Cultural Suits</a>
-        <a href="#cultural-categories" onclick="filterCategory('kids')" class="hover:text-white transition-colors">Kids &amp; Family</a>
-        <a href="#cultural-categories" onclick="filterCategory('bridal')" class="hover:text-white transition-colors">Weddings &amp; Melse</a>
-        <a href="#cultural-categories" onclick="filterCategory('netela')" class="hover:text-white transition-colors">Netela &amp; Gabi</a>
-        <a href="#cultural-categories" onclick="filterCategory('lifestyle')" class="hover:text-white transition-colors">Lifestyle &amp; Coffee Sets</a>
-        <a href="#artisan-model" class="hover:text-mint-200 transition-colors ml-auto flex items-center gap-1 text-[11px]">
-          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-mint-300"></i>
-          <span>Sovereign Escrow</span>
+      </div>
+
+      <form class="amazon-header-middle-section" role="search" action="amazon.html#shop" method="get">
+        <input class="search-bar" type="search" name="q" placeholder="Search cultural clothing and accessories" aria-label="Search products">
+        <button class="search-button" type="submit" aria-label="Search">
+          <img class="search-icon" src="images/icons/search-icon.png" alt="">
+        </button>
+      </form>
+
+      <nav class="amazon-header-right-section" aria-label="Account and shopping">
+        <a class="orders-link header-link" href="login.html">Sign in</a>
+        <a class="orders-link header-link" href="orders.html">
+          <span class="returns-text">Your</span>
+          <span class="orders-text">Orders</span>
         </a>
+        <a class="orders-link header-link" href="wishlist.html">Wishlist</a>
+        <a class="cart-link header-link" href="checkout.html">
+          <img class="cart-icon" src="images/icons/cart-icon.png" alt="">
+          <span class="cart-quantity js-cart-quantity">0</span>
+          <div class="cart-text">Cart</div>
+        </a>
+      </nav>
+    </div>
+
+    <nav class="sub-header" aria-label="Topazion's ten main categories">
+      <div class="sub-header-content">
+        <a href="amazon.html?category=home#shop" class="sub-header-link">Home</a>
+        <a href="amazon.html#shop" class="sub-header-link">All Collections</a>
+        <a href="amazon.html?category=women#shop" class="sub-header-link">Women’s Kemis</a>
+        <a href="amazon.html?category=men#shop" class="sub-header-link">Men’s Cultural</a>
+        <a href="amazon.html?category=kids#shop" class="sub-header-link">Kids &amp; Family</a>
+        <a href="amazon.html?category=weddings#shop" class="sub-header-link">Weddings &amp; Melse</a>
+        <a href="amazon.html?category=accessories#shop" class="sub-header-link">Netela &amp; Gabi</a>
+        <a href="amazon.html?sort=rating#shop" class="sub-header-link">Top Rated Designs</a>
+        <a href="about.html" class="sub-header-link">About Us</a>
+        <a href="about.html#help" class="sub-header-link">Help &amp; Support</a>
       </div>
     </nav>
   </header>
 
-  <!-- ==================== 3. HERO SECTION ==================== -->
-  <section class="relative pt-12 pb-20 lg:pt-16 lg:pb-28 overflow-hidden">
-    
-    <!-- Ambient Green Background Glows -->
-    <div class="absolute top-10 left-1/4 w-96 h-96 bg-mint-400/5 rounded-full filter blur-[120px] pointer-events-none"></div>
-    <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-neon/5 rounded-full filter blur-[140px] pointer-events-none"></div>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-        
-        <!-- Left Hero Typography & Dual Pill CTAs -->
-        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-          
-          <!-- Tracked Uppercase Sub-tagline -->
-          <div class="inline-flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-mint-300"></span>
-            <p class="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-mint-200">
-              A GOOD FIND FEELS LIKE HOME
-            </p>
-          </div>
-
-          <!-- Main Bold Headline -->
-          <h1 class="font-syne text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12]">
-            Everyday finds. <br/>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-mint-100 to-mint-300">
-              Made for living.
-            </span>
-          </h1>
-
-          <!-- Sub-headline -->
-          <p class="text-base sm:text-lg text-mutedForest max-w-xl leading-relaxed mx-auto lg:mx-0 font-normal">
-            Welcome to Topazion — thoughtful picks for your home, your style, and all the little moments in between. Handcrafted with ancestral pride across Addis Ababa, Gondar, and Asmara.
-          </p>
-
-          <!-- Dual Pill-Shaped Buttons -->
-          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-            <!-- Primary CTA in Solid Mint-Green with Dark Text -->
-            <a href="#cultural-categories" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-mint-200 text-emeraldForest-950 font-bold text-sm hover:bg-mint-300 transition-all shadow-glow-mint hover:scale-[1.02] text-center flex items-center justify-center gap-2 group cursor-pointer">
-              <span>Explore the collection</span>
-              <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-            </a>
-
-            <!-- Secondary CTA in Translucent Outlined Green -->
-            <a href="#artisan-model" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-emeraldForest-750/40 border border-mint-200/40 text-mint-200 font-semibold text-sm hover:bg-emeraldForest-750 hover:text-white transition-all text-center flex items-center justify-center gap-2 cursor-pointer">
-              <span>Get to know us</span>
-            </a>
-          </div>
-
-          <!-- Highlight Badges -->
-          <div class="pt-6 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-mutedForest border-t border-emeraldForest-750/60">
-            <div class="flex items-center gap-2">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-mint-300"></i>
-              <span class="text-white font-medium">100% Handspun Pit-Loom Cotton</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <i data-lucide="shield" class="w-4 h-4 text-mint-300"></i>
-              <span class="text-white font-medium">Milestone Escrow Protection</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <i data-lucide="truck" class="w-4 h-4 text-mint-300"></i>
-              <span class="text-white font-medium">Worldwide Courier Guarantee</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Right Hero Media: Concentric Green Rings with Authentic Cultural Centerpiece -->
-        <div class="lg:col-span-5 relative flex items-center justify-center">
-          
-          <div class="relative w-80 h-80 sm:w-96 sm:h-96 flex items-center justify-center">
-            
-            <!-- Concentric Decorative Rings -->
-            <div class="absolute inset-0 rounded-full concentric-ring-1 animate-spin-slow pointer-events-none"></div>
-            <div class="absolute inset-4 rounded-full concentric-ring-2 pointer-events-none"></div>
-            <div class="absolute inset-8 rounded-full concentric-ring-3 pointer-events-none"></div>
-
-            <!-- Central Floating Circular Frame with Authentic Cultural Artwork -->
-            <div class="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full overflow-hidden bg-emeraldForest-950 border-2 border-mint-300/40 shadow-2xl flex items-center justify-center group animate-float-slow">
-              
-              <!-- Real Cultural Photography Centerpiece -->
-              <img 
-                src="images/photo_2026-08-20_18-18-58.jpg" 
-                alt="Authentic Habesha Kemis Cultural Craftsmanship" 
-                onerror="this.src='https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=800&q=80'"
-                class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
-              >
-
-              <!-- Gradient Vignette -->
-              <div class="absolute inset-0 bg-gradient-to-t from-emeraldForest-950/80 via-transparent to-transparent"></div>
-
-              <!-- Centerpiece Label Badge -->
-              <div class="absolute bottom-4 inset-x-8 py-1.5 px-3 rounded-full bg-emeraldForest-950/90 backdrop-blur-md border border-mint-300/40 text-center">
-                <p class="text-[11px] font-bold text-mint-200">Axumite Fasika Kemis</p>
-                <p class="text-[9px] text-mutedForest">Handspun Organic Cotton</p>
-              </div>
-
-            </div>
-
-            <!-- Floating Artisan Verification Badges -->
-            <div class="absolute -top-3 -right-2 sm:-right-4 px-3 py-1.5 rounded-full bg-emeraldForest-950/95 border border-mint-300/40 shadow-glow-mint flex items-center gap-2 animate-float-slow">
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-              <span class="text-[10px] font-bold text-white">Shiro Meda Guild</span>
-            </div>
-
-            <div class="absolute -bottom-2 -left-2 sm:-left-4 px-3 py-1.5 rounded-full bg-emeraldForest-950/95 border border-cyan-neon/40 shadow-glow-cyan flex items-center gap-1.5 animate-float-slow">
-              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-cyan-neon"></i>
-              <span class="text-[10px] font-bold text-white">100% Escrow Protected</span>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== 4. PROMISE STRIP ==================== -->
-  <section class="py-6 bg-emeraldForest-900/60 border-y border-emeraldForest-750/70">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
-        <div class="flex items-center justify-center md:justify-start gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emeraldForest-800 border border-mint-300/20 text-mint-300 flex items-center justify-center shrink-0">
-            <i data-lucide="sparkles" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h4 class="font-bold text-xs text-white">Ancestral Craftsmanship</h4>
-            <p class="text-[11px] text-mutedForest">100% pit-loom handspun highland cotton, zero polyester knockoffs</p>
-          </div>
-        </div>
-
-        <div class="flex items-center justify-center md:justify-start gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emeraldForest-800 border border-mint-300/20 text-mint-300 flex items-center justify-center shrink-0">
-            <i data-lucide="shield" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h4 class="font-bold text-xs text-white">Escrow-Safeguarded Funds</h4>
-            <p class="text-[11px] text-mutedForest">Artisans paid milestone advances; fit guaranteed or 100% refunded</p>
-          </div>
-        </div>
-
-        <div class="flex items-center justify-center md:justify-start gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emeraldForest-800 border border-mint-300/20 text-mint-300 flex items-center justify-center shrink-0">
-            <i data-lucide="video" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h4 class="font-bold text-xs text-white">Loom Video Check-Ins</h4>
-            <p class="text-[11px] text-mutedForest">Personal HD clips sent straight from your assigned weaver's pit loom</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== 5. 5-STAGE ARTISAN MODEL & ESCROW PROTECTION ==================== -->
-  <section id="artisan-model" class="py-20 bg-emeraldForest-950/80 border-b border-emeraldForest-750/70">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <!-- Section Title & Escrow Guarantee Header -->
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <span class="bg-emeraldForest-800 text-mint-300 border border-mint-300/20 text-[11px] font-bold uppercase tracking-wider px-3.5 py-1 rounded-full">
-          Guild Supply Chain Transparency
-        </span>
-        <h2 class="font-syne text-2xl sm:text-3xl font-extrabold text-white mt-3">
-          How Your Attire is Born: From Seed to Crown
-        </h2>
-        <p class="text-xs sm:text-sm text-mutedForest mt-2">
-          Traditional Ethiopian and Eritrean attire requires up to 4 specialized artisans. Click each stage to see how Topazion’s milestone escrow shields both diaspora buyers and regional guilds.
+  <main id="main-content" class="homepage-main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <p class="eyebrow">A celebration of heritage</p>
+        <h1 id="hero-title">Wear your heritage. <span>Celebrate every occasion.</span></h1>
+        <p class="hero-description">
+          Discover Ethiopian and Eritrean cultural clothing, handwoven details, and thoughtful home finds for meaningful moments.
         </p>
-      </div>
-
-      <!-- 5-Stage Interactive Tabs -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8" id="pipeline-buttons">
-        <button onclick="changeStage(0)" id="btn-stg-0" class="p-4 rounded-2xl bg-emeraldForest-800 border border-mint-300 text-left transition-all cursor-pointer shadow-glow-mint">
-          <span class="text-[10px] font-mono font-bold text-mint-300 block mb-1">STAGE 01</span>
-          <h4 class="font-bold text-xs sm:text-sm text-white">Customer Order</h4>
-          <p class="text-[11px] text-mutedForest mt-0.5">Escrow Locked</p>
-        </button>
-
-        <button onclick="changeStage(1)" id="btn-stg-1" class="p-4 rounded-2xl bg-emeraldForest-900 border border-emeraldForest-750 text-left hover:border-emeraldForest-600 transition-all cursor-pointer">
-          <span class="text-[10px] font-mono font-bold text-mutedForest block mb-1">STAGE 02</span>
-          <h4 class="font-bold text-xs sm:text-sm text-white">Highland Cotton</h4>
-          <p class="text-[11px] text-mutedForest mt-0.5">Organic Gondar Harvest</p>
-        </button>
-
-        <button onclick="changeStage(2)" id="btn-stg-2" class="p-4 rounded-2xl bg-emeraldForest-900 border border-emeraldForest-750 text-left hover:border-emeraldForest-600 transition-all cursor-pointer">
-          <span class="text-[10px] font-mono font-bold text-mutedForest block mb-1">STAGE 03</span>
-          <h4 class="font-bold text-xs sm:text-sm text-white">Shemane Weaver</h4>
-          <p class="text-[11px] text-mutedForest mt-0.5">Ancestral Pit-Loom</p>
-        </button>
-
-        <button onclick="changeStage(3)" id="btn-stg-3" class="p-4 rounded-2xl bg-emeraldForest-900 border border-emeraldForest-750 text-left hover:border-emeraldForest-600 transition-all cursor-pointer">
-          <span class="text-[10px] font-mono font-bold text-mutedForest block mb-1">STAGE 04</span>
-          <h4 class="font-bold text-xs sm:text-sm text-white">Cultural Tailor</h4>
-          <p class="text-[11px] text-mutedForest mt-0.5">Bespoke Fit Cut</p>
-        </button>
-
-        <button onclick="changeStage(4)" id="btn-stg-4" class="p-4 rounded-2xl bg-emeraldForest-900 border border-emeraldForest-750 text-left hover:border-emeraldForest-600 transition-all cursor-pointer col-span-2 sm:col-span-1">
-          <span class="text-[10px] font-mono font-bold text-mutedForest block mb-1">STAGE 05</span>
-          <h4 class="font-bold text-xs sm:text-sm text-white">Tilfi Embroiderer</h4>
-          <p class="text-[11px] text-mutedForest mt-0.5">Imperial Gold Tibeb</p>
-        </button>
-      </div>
-
-      <!-- Stage Detail Display Card -->
-      <div class="glass-card rounded-2xl p-6 sm:p-8 border border-mint-300/20 shadow-xl">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-          
-          <div class="md:col-span-8 space-y-3">
-            <div class="flex items-center gap-2">
-              <span id="stg-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-mint-200 text-emeraldForest-950">
-                STAGE 01 OF 05
-              </span>
-              <span id="stg-role" class="text-xs font-semibold text-mint-300">Customer Specification &amp; Escrow Vault</span>
-            </div>
-            
-            <h3 id="stg-title" class="font-syne text-xl sm:text-2xl font-bold text-white">
-              Funds Sealed in Topazion Escrow Vault
-            </h3>
-
-            <p id="stg-desc" class="text-xs sm:text-sm text-mutedForest leading-relaxed">
-              When an order is placed, 100% of payment is securely locked in escrow. Artisans receive staged advances exclusively for raw materials; the remainder is only disbursed once the customer confirms flawless fit and delivery.
-            </p>
-          </div>
-
-          <div class="md:col-span-4 bg-emeraldForest-950/90 rounded-xl p-4 border border-emeraldForest-750 space-y-3">
-            <div class="flex justify-between text-xs">
-              <span class="text-mutedForest">Turnaround:</span>
-              <span id="stg-time" class="font-bold text-mint-200">Instant Verification</span>
-            </div>
-            <div class="flex justify-between text-xs">
-              <span class="text-mutedForest">Guild Hub:</span>
-              <span id="stg-hub" class="font-bold text-white">Topazion Global Desk</span>
-            </div>
-            <div class="flex justify-between text-xs">
-              <span class="text-mutedForest">Escrow Security:</span>
-              <span id="stg-security" class="font-bold text-mint-300">100% Protected</span>
-            </div>
-            <div class="w-full bg-emeraldForest-800 h-1.5 rounded-full overflow-hidden mt-1">
-              <div id="stg-bar" class="bg-mint-200 h-full rounded-full transition-all duration-300" style="width: 20%;"></div>
-            </div>
-          </div>
-
+        <div class="hero-actions">
+          <a href="amazon.html?category=women#shop" class="hero-primary-cta">Shop cultural apparel <span aria-hidden="true">→</span></a>
+          <a href="amazon.html?category=home#shop" class="hero-secondary-cta">Explore home finds</a>
+        </div>
+        <div class="hero-dual-links" aria-label="Shop by tradition or home">
+          <a href="amazon.html?category=women#shop">Habesha Kemis &amp; traditional wear</a>
+          <a href="amazon.html?category=home#shop">Home &amp; everyday finds</a>
+        </div>
+        <div class="hero-note">
+          <span class="hero-note-mark" aria-hidden="true">✦</span>
+          <span>Culture, craftsmanship, and style in every detail</span>
         </div>
       </div>
 
-    </div>
-  </section>
-
-  <!-- ==================== 6. CULTURAL CATEGORIES SHOWCASE WITH REAL PHOTOGRAPHY ==================== -->
-  <section id="cultural-categories" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-      <div>
-        <span class="text-[11px] font-bold uppercase tracking-wider text-mint-300">
-          Handcrafted Traditions
-        </span>
-        <h2 class="font-syne text-3xl sm:text-4xl font-extrabold text-white mt-1">
-          Explore Curated Categories
-        </h2>
-        <p class="text-xs sm:text-sm text-mutedForest mt-1">
-          Featuring high-resolution photography of authentic Shemane weaving and Tilfi needlework.
-        </p>
+      <div class="hero-art" aria-label="A look at Habesha cultural clothing">
+        <div class="hero-art-orbit hero-art-orbit-one"></div>
+        <div class="hero-art-orbit hero-art-orbit-two"></div>
+        <div class="hero-product hero-product-main">
+          <img src="images/products/habesha-kemis-off-shoulder-glamour.jpg" alt="Woman wearing a white Habesha Kemis" fetchpriority="high">
+        </div>
+        <div class="hero-product hero-product-side">
+          <img src="images/products/habesha-kemis-colorful-cross-necklace.jpg" alt="Colorful Habesha cultural attire" loading="lazy">
+        </div>
+        <div class="hero-product hero-product-small">
+          <img src="images/products/habesha-kemis-teal-netela.jpg" alt="Teal Netela and Kemis set" loading="lazy">
+        </div>
+        <div class="hero-art-caption"><span>Made for moments</span><strong>that matter.</strong></div>
       </div>
+    </section>
 
-      <a href="#custom-order" class="text-xs font-bold text-mint-200 hover:text-white flex items-center gap-1 group">
-        <span>Request bespoke custom sizing</span>
-        <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-      </a>
-    </div>
+    <section class="promise-strip" aria-label="The Topazion experience">
+      <div class="promise-item">
+        <span class="promise-icon" aria-hidden="true">✦</span>
+        <div><strong>Rooted in culture</strong><span>Discover Ethiopian and Eritrean style</span></div>
+      </div>
+      <div class="promise-item">
+        <span class="promise-icon" aria-hidden="true">♡</span>
+        <div><strong>For every occasion</strong><span>From family gatherings to celebrations</span></div>
+      </div>
+      <div class="promise-item">
+        <span class="promise-icon" aria-hidden="true">↗</span>
+        <div><strong>Find your style</strong><span>Explore garments, accessories, and more</span></div>
+      </div>
+    </section>
 
-    <!-- 5 Rich Category Cards Grid with Real Cultural Photos -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-      
-      <!-- Category 1: Women's Kemis -->
-      <div class="glass-card glass-card-hover rounded-2xl p-4 flex flex-col justify-between group">
+    <section class="discover-section" id="collections" aria-labelledby="collections-title">
+      <div class="section-heading">
         <div>
-          <div class="h-48 rounded-xl bg-emeraldForest-950 overflow-hidden mb-3.5 relative img-zoom-container">
-            <img 
-              src="images/photo_2026-08-20_18-18-58.jpg" 
-              alt="Authentic Habesha Kemis" 
-              onerror="this.src='https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=600&q=80'"
-              class="w-full h-full object-cover"
-            >
-            <span class="absolute top-2.5 right-2.5 text-[10px] font-bold bg-mint-200 text-emeraldForest-950 px-2 py-0.5 rounded-full shadow-sm">
-              Shemane
-            </span>
-          </div>
-          <h3 class="font-syne font-bold text-sm text-white group-hover:text-mint-200 transition-colors">Women's Kemis</h3>
-          <p class="text-[11px] text-mutedForest mt-1 leading-relaxed">Ceremonial Fasika gowns with fine metallic gold Tilfi collar &amp; hem embroidery.</p>
+          <p class="eyebrow">A celebration of heritage</p>
+          <h2 id="collections-title">Find something meaningful</h2>
+          <p class="collection-intro">Explore pieces inspired by tradition and made to be part of your own story.</p>
         </div>
-        <div class="pt-3 mt-3 border-t border-emeraldForest-750 flex items-center justify-between text-[11px]">
-          <span class="text-mint-300 font-semibold price-tag" data-usd="280">From $280</span>
-          <span class="text-mutedForest">21 Days Craft</span>
-        </div>
+        <a class="section-link" href="amazon.html#shop">Shop all collections <span aria-hidden="true">→</span></a>
       </div>
 
-      <!-- Category 2: Men's Cultural -->
-      <div class="glass-card glass-card-hover rounded-2xl p-4 flex flex-col justify-between group">
-        <div>
-          <div class="h-48 rounded-xl bg-emeraldForest-950 overflow-hidden mb-3.5 relative img-zoom-container">
-            <img 
-              src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80" 
-              alt="Men's Cultural Suits" 
-              class="w-full h-full object-cover"
-            >
-            <span class="absolute top-2.5 right-2.5 text-[10px] font-bold bg-mint-200 text-emeraldForest-950 px-2 py-0.5 rounded-full shadow-sm">
-              Tailored
-            </span>
-          </div>
-          <h3 class="font-syne font-bold text-sm text-white group-hover:text-mint-200 transition-colors">Men's Cultural Suits</h3>
-          <p class="text-[11px] text-mutedForest mt-1 leading-relaxed">Contemporary tailored blazers and Kidan Habesha with handwoven Tibeb lapel accents.</p>
-        </div>
-        <div class="pt-3 mt-3 border-t border-emeraldForest-750 flex items-center justify-between text-[11px]">
-          <span class="text-mint-300 font-semibold price-tag" data-usd="240">From $240</span>
-          <span class="text-mutedForest">18 Days Craft</span>
-        </div>
-      </div>
-
-      <!-- Category 3: Kids & Family -->
-      <div class="glass-card glass-card-hover rounded-2xl p-4 flex flex-col justify-between group">
-        <div>
-          <div class="h-48 rounded-xl bg-emeraldForest-950 overflow-hidden mb-3.5 relative img-zoom-container">
-            <img 
-              src="https://images.unsplash.com/photo-1609234656388-0ff363383899?auto=format&fit=crop&w=600&q=80" 
-              alt="Kids & Family Cultural Sets" 
-              class="w-full h-full object-cover"
-            >
-            <span class="absolute top-2.5 right-2.5 text-[10px] font-bold bg-mint-200 text-emeraldForest-950 px-2 py-0.5 rounded-full shadow-sm">
-              Family Sets
-            </span>
-          </div>
-          <h3 class="font-syne font-bold text-sm text-white group-hover:text-mint-200 transition-colors">Kids &amp; Family</h3>
-          <p class="text-[11px] text-mutedForest mt-1 leading-relaxed">Coordinated holiday and baptism attires handspun with ultra-soft organic highland cotton.</p>
-        </div>
-        <div class="pt-3 mt-3 border-t border-emeraldForest-750 flex items-center justify-between text-[11px]">
-          <span class="text-mint-300 font-semibold price-tag" data-usd="120">From $120</span>
-          <span class="text-mutedForest">12 Days Craft</span>
-        </div>
-      </div>
-
-      <!-- Category 4: Weddings & Melse -->
-      <div class="glass-card glass-card-hover rounded-2xl p-4 flex flex-col justify-between group">
-        <div>
-          <div class="h-48 rounded-xl bg-emeraldForest-950 overflow-hidden mb-3.5 relative img-zoom-container">
-            <img 
-              src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" 
-              alt="Weddings and Melse Royal Attire" 
-              class="w-full h-full object-cover"
-            >
-            <span class="absolute top-2.5 right-2.5 text-[10px] font-bold bg-mint-200 text-emeraldForest-950 px-2 py-0.5 rounded-full shadow-sm">
-              Bridal
-            </span>
-          </div>
-          <h3 class="font-syne font-bold text-sm text-white group-hover:text-mint-200 transition-colors">Weddings &amp; Melse</h3>
-          <p class="text-[11px] text-mutedForest mt-1 leading-relaxed">Imperial coronation capes, crowns, and bespoke bridal gown couples' sets.</p>
-        </div>
-        <div class="pt-3 mt-3 border-t border-emeraldForest-750 flex items-center justify-between text-[11px]">
-          <span class="text-mint-300 font-semibold price-tag" data-usd="490">From $490</span>
-          <span class="text-mutedForest">28 Days Craft</span>
-        </div>
-      </div>
-
-      <!-- Category 5: Netela & Gabi -->
-      <div class="glass-card glass-card-hover rounded-2xl p-4 flex flex-col justify-between group">
-        <div>
-          <div class="h-48 rounded-xl bg-emeraldForest-950 overflow-hidden mb-3.5 relative img-zoom-container">
-            <img 
-              src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=600&q=80" 
-              alt="Handwoven Netela & Gabi" 
-              class="w-full h-full object-cover"
-            >
-            <span class="absolute top-2.5 right-2.5 text-[10px] font-bold bg-mint-200 text-emeraldForest-950 px-2 py-0.5 rounded-full shadow-sm">
-              Gossamer
-            </span>
-          </div>
-          <h3 class="font-syne font-bold text-sm text-white group-hover:text-mint-200 transition-colors">Netela &amp; Gabi</h3>
-          <p class="text-[11px] text-mutedForest mt-1 leading-relaxed">Featherlight sheer shawls with double-sided Tibeb borders; warm heirloom winter Gabis.</p>
-        </div>
-        <div class="pt-3 mt-3 border-t border-emeraldForest-750 flex items-center justify-between text-[11px]">
-          <span class="text-mint-300 font-semibold price-tag" data-usd="95">From $95</span>
-          <span class="text-mutedForest">8 Days Craft</span>
-        </div>
-      </div>
-
-    </div>
-
-  </section>
-
-  <!-- ==================== 7. FEATURED SHOWCASE WITH REAL PRODUCTS ==================== -->
-  <section class="py-20 bg-emeraldForest-900/40 border-t border-emeraldForest-750/70">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-2xl mx-auto mb-14">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-mint-300">
-          Handspun Masterpieces
-        </span>
-        <h2 class="font-syne text-3xl sm:text-4xl font-extrabold text-white mt-1">
-          Featured Cultural Selections
-        </h2>
-        <p class="text-xs sm:text-sm text-mutedForest mt-2">
-          Curated authentic garments and lifestyle sets tailored to your custom specifications.
-        </p>
-      </div>
-
-      <!-- Product Cards Grid with Real Imagery -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-        <!-- Showcase Product 1: Fasika Kemis -->
-        <div class="glass-card glass-card-hover rounded-3xl p-5 flex flex-col justify-between group">
-          <div>
-            <div class="relative h-60 rounded-2xl bg-emeraldForest-950 overflow-hidden mb-4 img-zoom-container">
-              <img 
-                src="images/photo_2026-08-20_18-18-58.jpg" 
-                alt="Axumite Gold Fasika Kemis" 
-                onerror="this.src='https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=600&q=80'"
-                class="w-full h-full object-cover"
-              >
-              <span class="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider bg-emeraldForest-950/85 text-mint-200 border border-mint-300/30 px-2.5 py-0.5 rounded-full">
-                Habesha Kemis
-              </span>
-            </div>
-
-            <div class="flex items-center gap-1 text-amber-gold text-xs mb-1">
-              <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
-              <span class="font-bold text-white">4.98</span>
-              <span class="text-mutedForest">(38 reviews)</span>
-            </div>
-
-            <h3 class="font-syne font-bold text-base text-white group-hover:text-mint-200 transition-colors">
-              Axumite Gold Fasika Kemis
-            </h3>
-            <p class="text-xs text-mutedForest mt-1 line-clamp-2">
-              Two-ply sheer highland cotton with hand-embroidered metallic gold collar and cascading cuff motifs.
-            </p>
-          </div>
-
-          <div class="pt-4 mt-4 border-t border-emeraldForest-750 flex items-center justify-between">
-            <span class="font-mono text-lg font-bold text-white price-tag" data-usd="380">$380 USD</span>
-            <a href="#custom-order" class="px-4 py-1.5 rounded-full bg-mint-200 text-emeraldForest-950 text-xs font-bold hover:bg-mint-300 transition-colors">
-              Order Sizing
-            </a>
-          </div>
-        </div>
-
-        <!-- Showcase Product 2: Gondar Tilfi Cultural Suit -->
-        <div class="glass-card glass-card-hover rounded-3xl p-5 flex flex-col justify-between group">
-          <div>
-            <div class="relative h-60 rounded-2xl bg-emeraldForest-950 overflow-hidden mb-4 img-zoom-container">
-              <img 
-                src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80" 
-                alt="Gondar Tilfi Cultural Suit" 
-                class="w-full h-full object-cover"
-              >
-              <span class="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider bg-emeraldForest-950/85 text-mint-200 border border-mint-300/30 px-2.5 py-0.5 rounded-full">
-                Men's Cultural
-              </span>
-            </div>
-
-            <div class="flex items-center gap-1 text-amber-gold text-xs mb-1">
-              <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
-              <span class="font-bold text-white">4.95</span>
-              <span class="text-mutedForest">(24 reviews)</span>
-            </div>
-
-            <h3 class="font-syne font-bold text-base text-white group-hover:text-mint-200 transition-colors">
-              Gondar Tilfi Cultural Suit
-            </h3>
-            <p class="text-xs text-mutedForest mt-1 line-clamp-2">
-              Breathable tailored Italian linen blazer fused with traditional handwoven Shemane lapel insets.
-            </p>
-          </div>
-
-          <div class="pt-4 mt-4 border-t border-emeraldForest-750 flex items-center justify-between">
-            <span class="font-mono text-lg font-bold text-white price-tag" data-usd="340">$340 USD</span>
-            <a href="#custom-order" class="px-4 py-1.5 rounded-full bg-mint-200 text-emeraldForest-950 text-xs font-bold hover:bg-mint-300 transition-colors">
-              Order Sizing
-            </a>
-          </div>
-        </div>
-
-        <!-- Showcase Product 3: Asmara Gossamer Netela -->
-        <div class="glass-card glass-card-hover rounded-3xl p-5 flex flex-col justify-between group">
-          <div>
-            <div class="relative h-60 rounded-2xl bg-emeraldForest-950 overflow-hidden mb-4 img-zoom-container">
-              <img 
-                src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=600&q=80" 
-                alt="Asmara Gossamer Netela" 
-                class="w-full h-full object-cover"
-              >
-              <span class="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider bg-emeraldForest-950/85 text-mint-200 border border-mint-300/30 px-2.5 py-0.5 rounded-full">
-                Netela &amp; Shawl
-              </span>
-            </div>
-
-            <div class="flex items-center gap-1 text-amber-gold text-xs mb-1">
-              <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
-              <span class="font-bold text-white">5.00</span>
-              <span class="text-mutedForest">(47 reviews)</span>
-            </div>
-
-            <h3 class="font-syne font-bold text-base text-white group-hover:text-mint-200 transition-colors">
-              Asmara Gossamer Netela
-            </h3>
-            <p class="text-xs text-mutedForest mt-1 line-clamp-2">
-              Whisper-light ceremonial shawl spun on pit-looms with dual-sided mint and bronze Tibeb borders.
-            </p>
-          </div>
-
-          <div class="pt-4 mt-4 border-t border-emeraldForest-750 flex items-center justify-between">
-            <span class="font-mono text-lg font-bold text-white price-tag" data-usd="145">$145 USD</span>
-            <a href="#custom-order" class="px-4 py-1.5 rounded-full bg-mint-200 text-emeraldForest-950 text-xs font-bold hover:bg-mint-300 transition-colors">
-              Order Sizing
-            </a>
-          </div>
-        </div>
-
-        <!-- Showcase Product 4: Red Clay Jebena Set -->
-        <div class="glass-card glass-card-hover rounded-3xl p-5 flex flex-col justify-between group">
-          <div>
-            <div class="relative h-60 rounded-2xl bg-emeraldForest-950 overflow-hidden mb-4 img-zoom-container">
-              <img 
-                src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80" 
-                alt="Smoked Clay Jebena Coffee Set" 
-                class="w-full h-full object-cover"
-              >
-              <span class="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider bg-emeraldForest-950/85 text-mint-200 border border-mint-300/30 px-2.5 py-0.5 rounded-full">
-                Heritage Lifestyle
-              </span>
-            </div>
-
-            <div class="flex items-center gap-1 text-amber-gold text-xs mb-1">
-              <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
-              <span class="font-bold text-white">4.92</span>
-              <span class="text-mutedForest">(19 reviews)</span>
-            </div>
-
-            <h3 class="font-syne font-bold text-base text-white group-hover:text-mint-200 transition-colors">
-              Smoked Clay Jebena Set
-            </h3>
-            <p class="text-xs text-mutedForest mt-1 line-clamp-2">
-              Authentic volcanic red clay coffee pot with obsidian smoke glaze finish and six hand-painted ceramic Cini cups.
-            </p>
-          </div>
-
-          <div class="pt-4 mt-4 border-t border-emeraldForest-750 flex items-center justify-between">
-            <span class="font-mono text-lg font-bold text-white price-tag" data-usd="95">$95 USD</span>
-            <a href="#custom-order" class="px-4 py-1.5 rounded-full bg-mint-200 text-emeraldForest-950 text-xs font-bold hover:bg-mint-300 transition-colors">
-              Order Sizing
-            </a>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ==================== 8. TESTIMONIALS & REVIEWS SECTION ==================== -->
-  <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <div class="text-center max-w-2xl mx-auto mb-14">
-      <span class="text-[11px] font-bold uppercase tracking-wider text-mint-300">
-        Authentic Experiences
-      </span>
-      <h2 class="font-syne text-3xl sm:text-4xl font-extrabold text-white mt-1">
-        Trusted by Diasporas. Honored by Masters.
-      </h2>
-      <p class="text-xs sm:text-sm text-mutedForest mt-2">
-        See how Topazion empowers buyers worldwide while preserving the dignity and fair wages of ancestral craftspeople.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      
-      <!-- Review 1: Diaspora Buyer -->
-      <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
-        <div class="space-y-3">
-          <div class="flex items-center gap-1 text-amber-gold">
-            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-          </div>
-          <p class="text-xs sm:text-sm text-mutedForest leading-relaxed italic">
-            "Ordering our wedding Habesha Kemis from North America was completely anxiety-free. Knowing our funds were held in escrow until the dress was tailored and fitted perfectly gave our whole family peace of mind."
-          </p>
-        </div>
-        <div class="pt-5 mt-4 border-t border-emeraldForest-750 flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-mint-200 text-emeraldForest-950 font-bold text-xs flex items-center justify-center">
-            SM
-          </div>
-          <div>
-            <h4 class="font-bold text-xs text-white">Sara Mulugeta</h4>
-            <p class="text-[10px] text-mutedForest">Washington D.C. • Verified Buyer</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Review 2: Guild Artisan -->
-      <div class="glass-card rounded-2xl p-6 border-mint-300/30 shadow-glow-mint flex flex-col justify-between">
-        <div class="space-y-3">
-          <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-mint-200 text-emeraldForest-950">
-            Certified Master Weaver
-          </span>
-          <p class="text-xs sm:text-sm text-mutedForest leading-relaxed italic">
-            "Topazion eliminated unfair middlemen. For the first time in 30 years at Shiro Meda, our pit-loom guild receives milestone payments directly upfront for pure cotton, ensuring fair compensation for every weave."
-          </p>
-        </div>
-        <div class="pt-5 mt-4 border-t border-emeraldForest-750 flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-emeraldForest-750 text-mint-200 font-bold text-xs flex items-center justify-center">
-            GA
-          </div>
-          <div>
-            <h4 class="font-bold text-xs text-white">Gashe Alemayehu</h4>
-            <p class="text-[10px] text-mutedForest">Shiro Meda, Addis Ababa • Weaver (30 yrs)</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Review 3: Diaspora Buyer -->
-      <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
-        <div class="space-y-3">
-          <div class="flex items-center gap-1 text-amber-gold">
-            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-          </div>
-          <p class="text-xs sm:text-sm text-mutedForest leading-relaxed italic">
-            "The Gondar Tilfi suit was a masterpiece. The quality of the handwoven lapel drew compliments throughout our graduation ceremony in London. Will definitely be commissioning our holiday attire here."
-          </p>
-        </div>
-        <div class="pt-5 mt-4 border-t border-emeraldForest-750 flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-mint-200 text-emeraldForest-950 font-bold text-xs flex items-center justify-center">
-            YT
-          </div>
-          <div>
-            <h4 class="font-bold text-xs text-white">Yohannes Tesfaye</h4>
-            <p class="text-[10px] text-mutedForest">London, UK • Verified Buyer</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-  </section>
-
-  <!-- ==================== 9. BESPOKE CUSTOM SIZING SECONDARY CTA ==================== -->
-  <section id="custom-order" class="py-16 bg-emeraldForest-950 border-t border-emeraldForest-750/70">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-      
-      <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emeraldForest-800 text-mint-200 border border-mint-300/30">
-        Bespoke Guild Commissions
-      </span>
-
-      <h2 class="font-syne text-3xl sm:text-4xl font-extrabold text-white">
-        Looking for Custom Sizing or Wedding Attire?
-      </h2>
-
-      <p class="text-xs sm:text-sm text-mutedForest max-w-xl mx-auto leading-relaxed">
-        Submit your measurements directly to our master weavers and tailors in Addis Ababa and Asmara. All custom commissions are backed by the Topazion Escrow Protection Guarantee.
-      </p>
-
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-        <button onclick="alert('Custom order studio opened! A guild coordinator will contact you via WhatsApp / Email within 4 hours to verify your 12-point measurements.')" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-mint-200 text-emeraldForest-950 font-bold text-sm hover:bg-mint-300 transition-all shadow-glow-mint cursor-pointer">
-          Start custom measurement order
-        </button>
-        <a href="#cultural-categories" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-emeraldForest-850 border border-mint-200/30 text-mint-200 font-semibold text-sm hover:bg-emeraldForest-800 transition-all cursor-pointer">
-          Browse ready-to-ship designs
+      <div class="category-grid">
+        <a class="category-card category-home" href="amazon.html?category=women#shop">
+          <div class="category-image"><img src="images/products/habesha-kemis-white-ruffled.jpg" alt="White Habesha Kemis" loading="lazy"></div>
+          <div class="category-card-copy"><span>Grace &amp; elegance</span><h3>Women’s Kemis</h3><span class="category-arrow" aria-hidden="true">↗</span></div>
+        </a>
+        <a class="category-card category-style" href="amazon.html?category=weddings#shop">
+          <div class="category-image"><img src="images/products/habesha-couple-red-white-matching.jpg" alt="Coordinated Habesha wedding attire" loading="lazy"></div>
+          <div class="category-card-copy"><span>Made for celebrations</span><h3>Weddings &amp; Melse</h3><span class="category-arrow" aria-hidden="true">↗</span></div>
+        </a>
+        <a class="category-card category-comfort" href="amazon.html?category=accessories#shop">
+          <div class="category-image"><img src="images/products/habesha-kemis-teal-netela.jpg" alt="Teal handwoven Netela" loading="lazy"></div>
+          <div class="category-card-copy"><span>Tradition in every thread</span><h3>Netela &amp; Gabi</h3><span class="category-arrow" aria-hidden="true">↗</span></div>
         </a>
       </div>
+    </section>
 
+    <section class="story-section" aria-labelledby="story-title">
+      <div class="story-copy">
+        <p class="eyebrow">A little more personal</p>
+        <h2 id="story-title">Culture you can make your own.</h2>
+        <p>Topazion brings cultural clothing and thoughtful finds together in one place. Browse styles for celebrations, family traditions, and the moments you want to remember.</p>
+        <a class="story-cta" href="about.html">Discover our story <span aria-hidden="true">&nbsp;→</span></a>
+      </div>
+      <div class="story-image">
+        <img src="images/products/habesha-kemis-teal-netela.jpg" alt="A detail of a teal Habesha garment and Netela" loading="lazy">
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-main">
+      <a href="topazion-homepage.html" class="footer-brand" aria-label="Topazion home">
+        <img src="images/topazion-header-mark.png" alt="">
+        <span>Ethiopian and Eritrean cultural clothing, collections, and more.</span>
+      </a>
+      <nav class="footer-links" aria-label="Helpful links">
+        <a href="amazon.html#shop">Shop collections</a>
+        <a href="about.html">About Us</a>
+        <a href="about.html#help">Help &amp; FAQs</a>
+        <a href="orders.html">Your Orders</a>
+        <a href="tracking.html">Track an Order</a>
+        <a href="checkout.html">Your Cart</a>
+      </nav>
     </div>
-  </section>
-
-  <!-- ==================== 10. COMPLETE FOOTER WITH LOVELY LOGO ==================== -->
-  <footer class="bg-emeraldForest-950 border-t border-emeraldForest-750/70 pt-16 pb-12 text-mutedForest text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-emeraldForest-750/70">
-        
-        <!-- Brand & Description -->
-        <div class="md:col-span-5 space-y-4">
-          <a href="#" class="lovely-logo-badge group">
-            <img class="lovely-logo-img" src="images/topazion-header-mark.png" alt="Topazion" onerror="this.src='images/topazion-favicon.jpg'">
-            <div class="flex flex-col text-left pl-1 border-l border-white/15">
-              <span class="font-syne text-xs font-extrabold tracking-wider text-white">TOPAZION</span>
-              <span class="text-[9px] font-semibold text-mint-300 tracking-tight">HERITAGE GUILD</span>
-            </div>
-          </a>
-
-          <p class="text-xs leading-relaxed max-w-sm pt-2">
-            Topazion connects the global Ethiopian and Eritrean diaspora with certified master Shemane weavers and Tilfi embroiderers. Protected by sovereign milestone escrow.
-          </p>
-
-          <div class="flex items-center gap-3 text-mint-300 pt-1">
-            <span class="text-[10px] text-slate-400">Guild Hubs: Shiro Meda (Addis Ababa) • Gondar • Asmara • Washington D.C.</span>
-          </div>
-        </div>
-
-        <!-- Links Column 1 -->
-        <div class="md:col-span-2 space-y-3">
-          <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Collections</h4>
-          <ul class="space-y-2 text-xs">
-            <li><a href="#cultural-categories" class="hover:text-mint-200 transition-colors">Women's Kemis</a></li>
-            <li><a href="#cultural-categories" class="hover:text-mint-200 transition-colors">Men's Suits</a></li>
-            <li><a href="#cultural-categories" class="hover:text-mint-200 transition-colors">Kids &amp; Family</a></li>
-            <li><a href="#cultural-categories" class="hover:text-mint-200 transition-colors">Weddings &amp; Melse</a></li>
-            <li><a href="#cultural-categories" class="hover:text-mint-200 transition-colors">Netela &amp; Gabi</a></li>
-          </ul>
-        </div>
-
-        <!-- Links Column 2 -->
-        <div class="md:col-span-2 space-y-3">
-          <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Artisan Guild</h4>
-          <ul class="space-y-2 text-xs">
-            <li><a href="#artisan-model" class="hover:text-mint-200 transition-colors">5-Stage Model</a></li>
-            <li><a href="#artisan-model" class="hover:text-mint-200 transition-colors">Escrow Guarantee</a></li>
-            <li><a href="#artisan-model" class="hover:text-mint-200 transition-colors">Shiro Meda Hub</a></li>
-            <li><a href="#artisan-model" class="hover:text-mint-200 transition-colors">Gondar Highlands</a></li>
-            <li><a href="#artisan-model" class="hover:text-mint-200 transition-colors">Asmara Guild</a></li>
-          </ul>
-        </div>
-
-        <!-- Links Column 3 -->
-        <div class="md:col-span-3 space-y-3">
-          <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Trust &amp; Policies</h4>
-          <ul class="space-y-2 text-xs">
-            <li><a href="javascript:void(0)" onclick="alert('Topazion Escrow Policy: 100% money back if garment specifications do not match.')" class="hover:text-mint-200 transition-colors">Escrow Protection Policy</a></li>
-            <li><a href="javascript:void(0)" onclick="alert('All garments are audited for 100% natural organic highland cotton.')" class="hover:text-mint-200 transition-colors">Fabric Purity Guarantee</a></li>
-            <li><a href="javascript:void(0)" onclick="alert('Worldwide express diaspora courier tracked directly via DHL/FedEx.')" class="hover:text-mint-200 transition-colors">Global Diaspora Shipping</a></li>
-            <li><a href="javascript:void(0)" onclick="alert('Free alteration reimbursement program within 14 days of delivery.')" class="hover:text-mint-200 transition-colors">Diaspora Fit Warranty</a></li>
-          </ul>
-        </div>
-
-      </div>
-
-      <!-- Copyright & Bottom Bar -->
-      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
-        <p>© 2026 Topazion Heritage Marketplace Inc. All rights reserved. Standalone prototype.</p>
-        <div class="flex items-center gap-4">
-          <a href="#" class="hover:text-mint-200 transition-colors">Privacy Policy</a>
-          <span>•</span>
-          <a href="#" class="hover:text-mint-200 transition-colors">Terms of Escrow</a>
-          <span>•</span>
-          <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-mint-300 hover:text-white flex items-center gap-1 cursor-pointer">
-            <span>Back to top</span>
-            <i data-lucide="arrow-up" class="w-3 h-3"></i>
-          </button>
-        </div>
-      </div>
-
+    <div class="footer-bottom">
+      <span>&copy; 2026 Topazion</span>
+      <a href="#main-content">Back to top ↑</a>
     </div>
   </footer>
-
-  <!-- Interactive JavaScript: Pipeline, Search, Currency Switcher -->
-  <script>
-    lucide.createIcons();
-
-    // 1. Five-Stage Pipeline Data
-    const stages = [
-      {
-        badge: "STAGE 01 OF 05",
-        role: "Customer Specification & Escrow Vault",
-        title: "Funds Sealed in Topazion Escrow Vault",
-        desc: "When an order is placed, 100% of payment is securely locked in escrow. Artisans receive staged advances exclusively for raw materials; the remainder is only disbursed once the customer confirms flawless fit and delivery.",
-        time: "Instant Verification",
-        hub: "Topazion Global Desk",
-        security: "100% Protected",
-        bar: "20%"
-      },
-      {
-        badge: "STAGE 02 OF 05",
-        role: "Certified Organic Cotton Harvesters",
-        title: "Highland Organic Raw Cotton & Plant-Based Dyes",
-        desc: "High-elevation cotton is harvested from co-operatives in Arba Minch and Gondar. Master dyers extract herbal dyes from acacia bark, highland marigolds, and mineral stones.",
-        time: "3–4 Days",
-        hub: "Gondar Highlands Co-op",
-        security: "Advance Disbursed (20%)",
-        bar: "40%"
-      },
-      {
-        badge: "STAGE 03 OF 05",
-        role: "Ancestral Pit-Loom Weaver (Shemane)",
-        title: "Hypnotic Hand-Weaving on Earth Pit Looms",
-        desc: "Weavers sit at traditional subterranean treadle pit looms, rhythmically guiding the flying wooden shuttle to weave breathable, sheer highland cotton with perfect ethereal drape.",
-        time: "8–12 Days",
-        hub: "Shiro Meda Master Guild",
-        security: "Milestone Cleared (50%)",
-        bar: "65%"
-      },
-      {
-        badge: "STAGE 04 OF 05",
-        role: "Bespoke Cultural Tailor",
-        title: "Tailored Pattern Cut According to Custom Blueprint",
-        desc: "The woven cloth is aligned to the customer's exact 12-point measurement diagram. Master tailors cut the flowing traditional silhouette and reinforce double heirloom seams.",
-        time: "3–5 Days",
-        hub: "Asmara & Addis Tailoring Houses",
-        security: "Milestone Cleared (75%)",
-        bar: "85%"
-      },
-      {
-        badge: "STAGE 05 OF 05",
-        role: "Master Tilfi Embroiderer",
-        title: "Intricate Royal Gold & Mint Tibeb Needlework",
-        desc: "Sacred geometric motifs and coronation patterns are meticulously embroidered across the collar, cuffs, and hem using authentic metallic threads before final inspection and courier dispatch.",
-        time: "4–6 Days",
-        hub: "Tilfi Master Needle Guild",
-        security: "Ready for Courier Handover (100%)",
-        bar: "100%"
-      }
-    ];
-
-    function changeStage(idx) {
-      const data = stages[idx];
-      for (let i = 0; i < 5; i++) {
-        const btn = document.getElementById(`btn-stg-${i}`);
-        if (i === idx) {
-          btn.className = "p-4 rounded-2xl bg-emeraldForest-800 border border-mint-300 text-left transition-all cursor-pointer shadow-glow-mint";
-          btn.querySelector('span').className = "text-[10px] font-mono font-bold text-mint-300 block mb-1";
-        } else {
-          btn.className = "p-4 rounded-2xl bg-emeraldForest-900 border border-emeraldForest-750 text-left hover:border-emeraldForest-600 transition-all cursor-pointer";
-          btn.querySelector('span').className = "text-[10px] font-mono font-bold text-mutedForest block mb-1";
-        }
-      }
-
-      document.getElementById('stg-badge').innerText = data.badge;
-      document.getElementById('stg-role').innerText = data.role;
-      document.getElementById('stg-title').innerText = data.title;
-      document.getElementById('stg-desc').innerText = data.desc;
-      document.getElementById('stg-time').innerText = data.time;
-      document.getElementById('stg-hub').innerText = data.hub;
-      document.getElementById('stg-security').innerText = data.security;
-      document.getElementById('stg-bar').style.width = data.bar;
-    }
-
-    // 2. Real-Time Currency Switcher
-    const currencyRates = {
-      USD: { rate: 1.0, symbol: '$', code: 'USD' },
-      ETB: { rate: 125.0, symbol: 'Br ', code: 'ETB' },
-      EUR: { rate: 0.92, symbol: '€', code: 'EUR' },
-      GBP: { rate: 0.79, symbol: '£', code: 'GBP' },
-      CAD: { rate: 1.36, symbol: 'C$', code: 'CAD' }
-    };
-
-    function switchCurrency(curr) {
-      const conf = currencyRates[curr] || currencyRates.USD;
-      document.querySelectorAll('.price-tag').forEach(el => {
-        const usd = parseFloat(el.getAttribute('data-usd'));
-        if (usd) {
-          const converted = Math.round(usd * conf.rate);
-          const prefix = el.innerText.includes('From') ? 'From ' : '';
-          el.innerText = `${prefix}${conf.symbol}${converted.toLocaleString()} ${conf.code}`;
-        }
-      });
-    }
-
-    // 3. Search Filter
-    function handleSearch(query) {
-      const q = query.trim().toLowerCase();
-      const cards = document.querySelectorAll('#cultural-categories .glass-card');
-      cards.forEach(card => {
-        const text = card.innerText.toLowerCase();
-        if (!q || text.includes(q)) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
-
-    function filterCategory(type) {
-      const target = document.getElementById('cultural-categories');
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  </script>
 </body>
+
 </html>
