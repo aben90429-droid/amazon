@@ -287,4 +287,5 @@ loadProducts(() => {
 });
 /*
 this is a start of a great legacy that i will build in my life time this will be a note tha i promise my self to be the gratest software engineer that has passed through this life 
-i have started a journey that will end in death */
+i have started a journey that will end in death 
+https://amazon-2-fq5x.onrender.com*/
